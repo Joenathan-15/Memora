@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 
 export default function Appearance() {
     return (
+        <p>appearance not done</p>
         // <AppLayout breadcrumbs={breadcrumbs}>
         //     <Head title="Appearance settings" />
         //
