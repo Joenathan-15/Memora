@@ -10,6 +10,11 @@ export default [
     js.configs.recommended,
     ...typescript.configs.recommended,
     {
+        env: {
+            browser: true,
+            node: true,
+            es2021: true,
+        },
         ...react.configs.flat.recommended,
         ...react.configs.flat['jsx-runtime'], // Required for React 17+
         languageOptions: {
