@@ -1,18 +1,36 @@
-import AuthLayoutTemplate from '@/layouts/auth/auth-simple-layout';
+import { usePage } from "@inertiajs/react";
+import type { SharedData } from "@/types";
+import { Box } from '@mantine/core';
+import { useMantineColorScheme, Group } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+import RootLayout from '@/layouts/root-layout';
+import { LayoutProps } from '@/types';
+import Navbar from '@/components/navbar';
+import classes from '@/components/navbar/index.module.css';
 
-export default function AuthLayout({
-    children,
-    title,
-    description,
-    ...props
-}: {
-    children: React.ReactNode;
-    title: string;
-    description: string;
-}) {
+function AuthLayout({ child }: LayoutProps) {
+    const isMobile = useMediaQuery('(max-width: 768px)');
+    document.body.dataset.loaded = "true";
+
     return (
-        <AuthLayoutTemplate title={title} description={description} {...props}>
-            {children}
-        </AuthLayoutTemplate>
+        <>
+            <Navbar />
+
+            <Box
+                component="main"
+                className={classes.mainContent}
+                style={{
+                    minHeight: '100vh',
+                    padding: isMobile ? 'var(--mantine-spacing-md)' : 'var(--mantine-spacing-xl)',
+                    paddingTop: isMobile ? '80px' : 'var(--mantine-spacing-xl)',
+                }}
+            >
+                {child}
+            </Box>
+        </>
     );
 }
+
+AuthLayout.layout = (page: React.ReactNode) => <RootLayout child={page} />;
+
+export default AuthLayout;

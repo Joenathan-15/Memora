@@ -1,117 +1,136 @@
-import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
-import { login } from '@/routes';
-import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import {
+    Button,
+    Checkbox,
+    Divider,
+    Group,
+    Paper,
+    PaperProps,
+    PasswordInput,
+    Stack,
+    Text,
+    TextInput,
+    Center,
+    Flex,
+} from '@mantine/core';
+import GoogleButton from '@/components/google-button';
+import GithubButton from '@/components/github-button';
+import Link from '@/components/link';
+import { request } from '@/wayfinder/routes/password';
+import { login } from '@/wayfinder/routes';
+import { useForm } from '@inertiajs/react';
+import RegisteredUserController from '@/wayfinder/actions/App/Http/Controllers/Auth/RegisteredUserController';
 
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+interface Props extends PaperProps {
+    canResetPassword: boolean;
+    status: string;
+}
 
-export default function Register() {
+export default function AuthenticationForm({ canResetPassword, status, ...paperProps }: Props) {
+    const form = useForm({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+        remember: false,
+        terms: false,
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        form.submit(RegisteredUserController.store(), {
+            preserveScroll: true,
+        });
+    };
+
     return (
-        <AuthLayout
-            title="Create an account"
-            description="Enter your details below to create your account"
-        >
-            <Head title="Register" />
-            <Form
-                {...RegisteredUserController.store.form()}
-                resetOnSuccess={['password', 'password_confirmation']}
-                disableWhileProcessing
-                className="flex flex-col gap-6"
-            >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="name"
-                                    name="name"
-                                    placeholder="Full name"
-                                />
-                                <InputError
-                                    message={errors.name}
-                                    className="mt-2"
-                                />
-                            </div>
+        <Center style={{ width: '100%', height: '100vh' }}>
+            <Paper radius="md" p="lg" w={400} withBorder shadow="sm" {...paperProps}>
+                <Text size="lg" fw={500}>
+                    Welcome to Memora, login with
+                </Text>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="email"
-                                    name="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                <Group grow mb="md" mt="md">
+                    <GoogleButton radius="xl">Google</GoogleButton>
+                    <GithubButton radius="xl">Github</GithubButton>
+                </Group>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password">Password</Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    tabIndex={3}
-                                    autoComplete="new-password"
-                                    name="password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">
-                                    Confirm password
-                                </Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type="password"
-                                    required
-                                    tabIndex={4}
-                                    autoComplete="new-password"
-                                    name="password_confirmation"
-                                    placeholder="Confirm password"
-                                />
-                                <InputError
-                                    message={errors.password_confirmation}
-                                />
-                            </div>
+                <form onSubmit={handleSubmit}>
+                    <Stack>
+                        <TextInput
+                            label="Name"
+                            placeholder="Your name"
+                            value={form.data.name}
+                            onChange={(e) => form.setData('name', e.currentTarget.value)}
+                            error={form.errors.name}
+                            radius="md"
+                        />
 
-                            <Button
-                                type="submit"
-                                className="mt-2 w-full"
-                                tabIndex={5}
-                                data-test="register-user-button"
-                            >
-                                {processing && (
-                                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                                )}
-                                Create account
-                            </Button>
-                        </div>
+                        <TextInput
+                            withAsterisk
+                            label="Email"
+                            placeholder="hello@mantine.dev"
+                            value={form.data.email}
+                            onChange={(e) => form.setData('email', e.currentTarget.value)}
+                            error={form.errors.email}
+                            radius="md"
+                        />
 
-                        <div className="text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
-                                Log in
-                            </TextLink>
-                        </div>
-                    </>
-                )}
-            </Form>
-        </AuthLayout>
+                        <PasswordInput
+                            withAsterisk
+                            label="Password"
+                            placeholder="Your password"
+                            value={form.data.password}
+                            onChange={(e) => form.setData('password', e.currentTarget.value)}
+                            error={form.errors.password}
+                            radius="md"
+                        />
+
+                        <PasswordInput
+                            withAsterisk
+                            label="Confirm Password"
+                            placeholder="Confirm your password"
+                            value={form.data.password_confirmation}
+                            onChange={(e) =>
+                                form.setData('password_confirmation', e.currentTarget.value)
+                            }
+                            error={form.errors.password_confirmation}
+                            radius="md"
+                        />
+
+                        <Checkbox
+                            label="Remember me"
+                            checked={form.data.remember}
+                            onChange={(e) => form.setData('remember', e.currentTarget.checked)}
+                        />
+
+                        <Checkbox
+                            label="I accept terms and conditions"
+                            checked={form.data.terms}
+                            onChange={(e) => form.setData('terms', e.currentTarget.checked)}
+                        />
+                    </Stack>
+
+                    <Group justify="space-between" mt="xl">
+                        <Flex direction="column">
+                            {canResetPassword && (
+                                <Link size="xs" c="dimmed" href={request()}>
+                                    Forgot password?
+                                </Link>
+                            )}
+                            <Link href={login()} type="button" c="dimmed" size="xs">
+                                Already have an account? Login
+                            </Link>
+                        </Flex>
+
+                        <Button type="submit" radius="xl" loading={form.processing}>
+                            Register
+                        </Button>
+                    </Group>
+                </form>
+            </Paper>
+        </Center>
     );
 }

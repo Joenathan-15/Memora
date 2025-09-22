@@ -1,115 +1,137 @@
-import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
-import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import {
+    Button,
+    Checkbox,
+    Divider,
+    Group,
+    Paper,
+    PaperProps,
+    PasswordInput,
+    Stack,
+    Text,
+    TextInput,
+    Center,
+    Flex,
+} from '@mantine/core';
+import { useForm } from '@inertiajs/react';
+import GoogleButton from '@/components/google-button';
+import GithubButton from '@/components/github-button';
+import Link from '@/components/link';
+import { request } from '@/wayfinder/routes/password';
+import { register } from '@/wayfinder/routes';
+import AuthenticatedSessionController from '@/wayfinder/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
-interface LoginProps {
-    status?: string;
+interface Props extends PaperProps {
     canResetPassword: boolean;
+    status: string;
 }
 
-export default function Login({ status, canResetPassword }: LoginProps) {
+export default function AuthenticationForm({
+                                               canResetPassword,
+                                               status,
+                                               ...paperProps
+                                           }: Props) {
+    const form = useForm({
+        email: '',
+        password: '',
+        remember: false,
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // The Wayfinder way - pass the route definition directly to Inertia's submit
+        form.submit(AuthenticatedSessionController.store(), {
+            preserveScroll: true,
+        });
+    };
+
     return (
-        <AuthLayout
-            title="Log in to your account"
-            description="Enter your email and password below to log in"
-        >
-            <Head title="Log in" />
-
-            <Form
-                {...AuthenticatedSessionController.store.form()}
-                resetOnSuccess={['password']}
-                className="flex flex-col gap-6"
+        <Center style={{ width: '100%', height: '100vh' }}>
+            <Paper
+                radius="md"
+                p="lg"
+                w={400}
+                withBorder
+                shadow="sm"
+                {...paperProps}
             >
-                {({ processing, errors }) => (
-                    <>
-                        <div className="grid gap-6">
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="email@example.com"
-                                />
-                                <InputError message={errors.email} />
-                            </div>
+                <Text size="lg" fw={500}>
+                    Welcome to Memora, login with
+                </Text>
 
-                            <div className="grid gap-2">
-                                <div className="flex items-center">
-                                    <Label htmlFor="password">Password</Label>
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm"
-                                            tabIndex={5}
-                                        >
-                                            Forgot password?
-                                        </TextLink>
-                                    )}
-                                </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
-                                <InputError message={errors.password} />
-                            </div>
+                <Group grow mb="md" mt="md">
+                    <GoogleButton radius="xl">Google</GoogleButton>
+                    <GithubButton radius="xl">Github</GithubButton>
+                </Group>
 
-                            <div className="flex items-center space-x-3">
-                                <Checkbox
-                                    id="remember"
-                                    name="remember"
-                                    tabIndex={3}
-                                />
-                                <Label htmlFor="remember">Remember me</Label>
-                            </div>
+                <Divider
+                    label="Or continue with email"
+                    labelPosition="center"
+                    my="lg"
+                />
 
-                            <Button
-                                type="submit"
-                                className="mt-4 w-full"
-                                tabIndex={4}
-                                disabled={processing}
-                                data-test="login-button"
-                            >
-                                {processing && (
-                                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                                )}
-                                Log in
-                            </Button>
-                        </div>
-
-                        <div className="text-center text-sm text-muted-foreground">
-                            Don't have an account?{' '}
-                            <TextLink href={register()} tabIndex={5}>
-                                Sign up
-                            </TextLink>
-                        </div>
-                    </>
+                {status && (
+                    <Text c="green" size="sm" mb="md">
+                        {status}
+                    </Text>
                 )}
-            </Form>
 
-            {status && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    {status}
-                </div>
-            )}
-        </AuthLayout>
+                <form onSubmit={handleSubmit}>
+                    <Stack>
+                        <TextInput
+                            withAsterisk
+                            label="Email"
+                            placeholder="hello@mantine.dev"
+                            value={form.data.email}
+                            onChange={(e) => form.setData('email', e.currentTarget.value)}
+                            error={form.errors.email}
+                            radius="md"
+                        />
+
+                        <PasswordInput
+                            withAsterisk
+                            label="Password"
+                            placeholder="Your password"
+                            value={form.data.password}
+                            onChange={(e) => form.setData('password', e.currentTarget.value)}
+                            error={form.errors.password}
+                            radius="md"
+                        />
+
+                        <Checkbox
+                            label="Remember me"
+                            checked={form.data.remember}
+                            onChange={(e) => form.setData('remember', e.currentTarget.checked)}
+                        />
+                    </Stack>
+
+                    <Group justify="space-between" mt="xl">
+                        <Flex direction="column">
+                            {canResetPassword && (
+                                <Link size="xs" c="dimmed" href={request()}>
+                                    Forgot password?
+                                </Link>
+                            )}
+                            <Link
+                                href={register()}
+                                type="button"
+                                c="dimmed"
+                                size="xs"
+                            >
+                                Don't have an account? Register
+                            </Link>
+                        </Flex>
+
+                        <Button
+                            type="submit"
+                            radius="xl"
+                            loading={form.processing}
+                        >
+                            Login
+                        </Button>
+                    </Group>
+                </form>
+            </Paper>
+        </Center>
     );
 }

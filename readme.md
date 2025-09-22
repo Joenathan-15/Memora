@@ -9,5 +9,6 @@ Memora is a flashCard app that helps you memorize things.
 5. Set up your database and configure the `.env` file with your database credentials.
 6. Set up your application key: `php artisan key:generate`
 7. Run the migrations: `php artisan migrate`
+8. Run Wayfinder: `php artisan wayfinder:generate --path=resources/js/wayfinder`
 8. Start the development server: `php artisan serve && npm run dev`
 9. Open your browser and go to `http://localhost:8000`
