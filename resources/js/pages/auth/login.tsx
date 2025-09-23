@@ -3,14 +3,14 @@ import {
     Checkbox,
     Divider,
     Group,
-    Paper,
-    PaperProps,
+    CardProps,
     PasswordInput,
     Stack,
     Text,
     TextInput,
     Center,
     Flex,
+    Card,
 } from '@mantine/core';
 import { useForm } from '@inertiajs/react';
 import GoogleButton from '@/components/google-button';
@@ -20,16 +20,12 @@ import { request } from '@/wayfinder/routes/password';
 import { register } from '@/wayfinder/routes';
 import AuthenticatedSessionController from '@/wayfinder/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
-interface Props extends PaperProps {
+interface Props extends CardProps {
     canResetPassword: boolean;
     status: string;
 }
 
-export default function AuthenticationForm({
-                                               canResetPassword,
-                                               status,
-                                               ...paperProps
-                                           }: Props) {
+export default function AuthenticationForm({ canResetPassword, status, ...cardProps }: Props) {
     const form = useForm({
         email: '',
         password: '',
@@ -39,7 +35,6 @@ export default function AuthenticationForm({
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // The Wayfinder way - pass the route definition directly to Inertia's submit
         form.submit(AuthenticatedSessionController.store(), {
             preserveScroll: true,
         });
@@ -47,21 +42,20 @@ export default function AuthenticationForm({
 
     return (
         <Center style={{ width: '100%', height: '100vh' }}>
-            <Paper
-                radius="md"
+            <Card
                 p="lg"
                 w={400}
                 withBorder
                 shadow="sm"
-                {...paperProps}
+                {...cardProps}
             >
                 <Text size="lg" fw={500}>
                     Welcome to Memora, login with
                 </Text>
 
-                <Group grow mb="md" mt="md">
-                    <GoogleButton radius="xl">Google</GoogleButton>
-                    <GithubButton radius="xl">Github</GithubButton>
+                <Group grow mt="md">
+                    <GoogleButton>Google</GoogleButton>
+                    <GithubButton>Github</GithubButton>
                 </Group>
 
                 <Divider
@@ -81,11 +75,10 @@ export default function AuthenticationForm({
                         <TextInput
                             withAsterisk
                             label="Email"
-                            placeholder="hello@mantine.dev"
+                            placeholder="mail@example.com"
                             value={form.data.email}
                             onChange={(e) => form.setData('email', e.currentTarget.value)}
                             error={form.errors.email}
-                            radius="md"
                         />
 
                         <PasswordInput
@@ -95,7 +88,6 @@ export default function AuthenticationForm({
                             value={form.data.password}
                             onChange={(e) => form.setData('password', e.currentTarget.value)}
                             error={form.errors.password}
-                            radius="md"
                         />
 
                         <Checkbox
@@ -124,14 +116,13 @@ export default function AuthenticationForm({
 
                         <Button
                             type="submit"
-                            radius="xl"
                             loading={form.processing}
                         >
                             Login
                         </Button>
                     </Group>
                 </form>
-            </Paper>
+            </Card>
         </Center>
     );
 }

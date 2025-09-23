@@ -1,52 +1,60 @@
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
-import { store } from '@/routes/password/confirm';
+import { store } from '@/wayfinder/routes/password/confirm';
 import { Form, Head } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
+import GuestLayout from '@/layouts/guest-layout';
+import {
+    PasswordInput,
+    Button,
+    Stack,
+    Loader,
+    Text,
+    Card,
+    Center,
+} from '@mantine/core';
 
 export default function ConfirmPassword() {
     return (
-        <AuthLayout
-            title="Confirm your password"
-            description="This is a secure area of the application. Please confirm your password before continuing."
-        >
-            <Head title="Confirm password" />
+        <Center style={{ width: '100%', height: '100vh' }}>
+            <Card p="lg" w={400} withBorder shadow="sm">
 
-            <Form {...store.form()} resetOnSuccess={['password']}>
-                {({ processing, errors }) => (
-                    <div className="space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
+                <Head title="Confirm password" />
+
+                <Stack gap="xs" mb={20}>
+                    <Text size="lg" fw={500}>Confirm your password</Text>
+
+                    <Text size="sm" c="dimmed">This is a secure area of the application. Please confirm your password before continuing.</Text>
+                </Stack>
+
+                <Form {...store.form()} resetOnSuccess={['password']}>
+                    {({ processing, errors }) => (
+                        <Stack gap="md">
+                            <PasswordInput
                                 id="password"
-                                type="password"
                                 name="password"
-                                placeholder="Password"
+                                label="Password"
+                                placeholder="Enter your password"
                                 autoComplete="current-password"
                                 autoFocus
+                                error={errors.password && <Text size="xs" c="red">{errors.password}</Text>}
                             />
 
-                            <InputError message={errors.password} />
-                        </div>
-
-                        <div className="flex items-center">
                             <Button
-                                className="w-full"
+                                fullWidth
+                                type="submit"
                                 disabled={processing}
                                 data-test="confirm-password-button"
+                                leftSection={processing ? <Loader size="xs" /> : null}
                             >
-                                {processing && (
-                                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                                )}
                                 Confirm password
                             </Button>
-                        </div>
-                    </div>
-                )}
-            </Form>
-        </AuthLayout>
+                        </Stack>
+                    )}
+                </Form>
+
+            </Card>
+        </Center>
     );
 }
+
+ConfirmPassword.layout = (page: React.ReactNode) => (
+    <GuestLayout child={page} />
+);

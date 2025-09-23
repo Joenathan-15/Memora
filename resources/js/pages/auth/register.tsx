@@ -3,14 +3,14 @@ import {
     Checkbox,
     Divider,
     Group,
-    Paper,
-    PaperProps,
     PasswordInput,
     Stack,
     Text,
     TextInput,
     Center,
     Flex,
+    Card,
+    CardProps,
 } from '@mantine/core';
 import GoogleButton from '@/components/google-button';
 import GithubButton from '@/components/github-button';
@@ -20,12 +20,12 @@ import { login } from '@/wayfinder/routes';
 import { useForm } from '@inertiajs/react';
 import RegisteredUserController from '@/wayfinder/actions/App/Http/Controllers/Auth/RegisteredUserController';
 
-interface Props extends PaperProps {
+interface Props extends CardProps {
     canResetPassword: boolean;
     status: string;
 }
 
-export default function AuthenticationForm({ canResetPassword, status, ...paperProps }: Props) {
+export default function AuthenticationForm({ canResetPassword, status, ...cardProps }: Props) {
     const form = useForm({
         name: '',
         email: '',
@@ -45,14 +45,14 @@ export default function AuthenticationForm({ canResetPassword, status, ...paperP
 
     return (
         <Center style={{ width: '100%', height: '100vh' }}>
-            <Paper radius="md" p="lg" w={400} withBorder shadow="sm" {...paperProps}>
+            <Card p="lg" w={400} withBorder shadow="sm" {...cardProps}>
                 <Text size="lg" fw={500}>
                     Welcome to Memora, login with
                 </Text>
 
                 <Group grow mb="md" mt="md">
-                    <GoogleButton radius="xl">Google</GoogleButton>
-                    <GithubButton radius="xl">Github</GithubButton>
+                    <GoogleButton>Google</GoogleButton>
+                    <GithubButton>Github</GithubButton>
                 </Group>
 
                 <Divider label="Or continue with email" labelPosition="center" my="lg" />
@@ -65,17 +65,15 @@ export default function AuthenticationForm({ canResetPassword, status, ...paperP
                             value={form.data.name}
                             onChange={(e) => form.setData('name', e.currentTarget.value)}
                             error={form.errors.name}
-                            radius="md"
                         />
 
                         <TextInput
                             withAsterisk
                             label="Email"
-                            placeholder="hello@mantine.dev"
+                            placeholder="mail@example.com"
                             value={form.data.email}
                             onChange={(e) => form.setData('email', e.currentTarget.value)}
                             error={form.errors.email}
-                            radius="md"
                         />
 
                         <PasswordInput
@@ -85,7 +83,6 @@ export default function AuthenticationForm({ canResetPassword, status, ...paperP
                             value={form.data.password}
                             onChange={(e) => form.setData('password', e.currentTarget.value)}
                             error={form.errors.password}
-                            radius="md"
                         />
 
                         <PasswordInput
@@ -97,7 +94,6 @@ export default function AuthenticationForm({ canResetPassword, status, ...paperP
                                 form.setData('password_confirmation', e.currentTarget.value)
                             }
                             error={form.errors.password_confirmation}
-                            radius="md"
                         />
 
                         <Checkbox
@@ -125,12 +121,12 @@ export default function AuthenticationForm({ canResetPassword, status, ...paperP
                             </Link>
                         </Flex>
 
-                        <Button type="submit" radius="xl" loading={form.processing}>
+                        <Button type="submit" loading={form.processing}>
                             Register
                         </Button>
                     </Group>
                 </form>
-            </Paper>
+            </Card>
         </Center>
     );
 }
