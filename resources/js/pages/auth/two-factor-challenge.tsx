@@ -111,6 +111,7 @@ export default function TwoFactorChallenge() {
                                 </Text>
 
                                 <Button
+                                    type="submit"
                                     variant="outline"
                                     size="xs"
                                     onClick={() => toggleRecoveryMode(clearErrors)}

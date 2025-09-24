@@ -1,5 +1,5 @@
-import PasswordResetLinkController from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
-import { login } from '@/routes';
+import PasswordResetLinkController from '@/wayfinder/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
+import { login } from '@/wayfinder/routes';
 import { Form, Head } from '@inertiajs/react';
 import GuestLayout from '@/layouts/guest-layout';
 import {
@@ -45,6 +45,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                                 />
 
                                 <Button
+                                    type="submit"
                                     fullWidth
                                     disabled={processing}
                                     className="w-full"

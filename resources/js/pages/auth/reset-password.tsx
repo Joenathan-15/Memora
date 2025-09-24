@@ -1,10 +1,7 @@
-import NewPasswordController from '@/actions/App/Http/Controllers/Auth/NewPasswordController';
+import NewPasswordController from '@/wayfinder/actions/App/Http/Controllers/Auth/NewPasswordController';
 import { Form, Head } from '@inertiajs/react';
-
-import AuthLayout from '@/layouts/auth-layout';
-import PasswordResetLinkController from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
 import Link from '@/components/link';
-import { login } from '@/routes';
+import { login } from '@/wayfinder/routes';
 import {
     Button,
     Card,
@@ -69,6 +66,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                 />
 
                                 <Button
+                                    type="submit"
                                     fullWidth
                                     disabled={processing}
                                     className="w-full"

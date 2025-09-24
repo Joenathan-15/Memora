@@ -13,5 +13,10 @@ export default function Appearance() {
 }
 
 Appearance.layout = (page: React.ReactNode) => (
-    <CenteredCardLayout child={page} title="Appearance settings" description="Update your account's appearance settings" />
+    <CenteredCardLayout
+        child={page}
+        type="guest"
+        title="Appearance settings"
+        description="Update your account's appearance settings"
+    />
 );

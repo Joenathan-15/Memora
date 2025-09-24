@@ -13,7 +13,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-Route::get('/tmp', fn () => Inertia::render('settings/appearance'));
+Route::get('/tmp', fn () => Inertia::render('settings/two-factor'));
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
