@@ -65,10 +65,11 @@ function Dashboard() {
 
                     <SimpleGrid
                         cols={{ base: 1, sm: 2, md: 3 }}
+                        className="group"
                     >
-                        {[...Array(10)].map((x, i) =>
-                            <CardStats />
-                        )}
+                        {[...Array(10)].map((x, i) => (
+                            <CardStats key={i} />
+                        ))}
                     </SimpleGrid>
                 </Stack>
             </Container>
