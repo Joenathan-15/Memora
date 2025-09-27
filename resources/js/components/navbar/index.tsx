@@ -12,14 +12,14 @@ import {
 } from '@mantine/core';
 import { UserButton } from '@/components/navbar/user-button';
 import classes from './index.module.css';
+import Link from '@/components/link';
 
 const mainLinks = [
-    { icon: IconUpload, label: 'Upload PDF' },
-    { icon: IconBook, label: 'All Decks' },
-    { icon: IconClock, label: 'Due for Review', notifications: 5 },
-    { icon: IconStar, label: 'Favorites' },
-    { icon: IconPlus, label: 'Create Deck' },
-    { icon: IconUser, label: 'Profile' },
+    { icon: IconUpload, label: 'Upload PDF', url: '/upload' },
+    { icon: IconBook, label: 'All Decks', url: '/decks' },
+    { icon: IconClock, label: 'Due for Review', url: '/decks/due', notifications: 5 },
+    { icon: IconPlus, label: 'Create Deck', url: '/decks/create' },
+    { icon: IconUser, label: 'Profile', url: '/profile' },
 ];
 
 const decks = [
@@ -49,7 +49,7 @@ export function Navbar() {
 
             <div className={classes.section}>
                 {mainLinks.map((link) => (
-                    <UnstyledButton key={link.label} className={classes.mainLink}>
+                    <Link href={link.url} underline="never" component={UnstyledButton} key={link.label} className={classes.mainLink}>
                         <div className={classes.mainLinkInner}>
                             <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
                             <span>{link.label}</span>
@@ -59,7 +59,7 @@ export function Navbar() {
                                 {link.notifications}
                             </Badge>
                         )}
-                    </UnstyledButton>
+                    </Link>
                 ))}
             </div>
 

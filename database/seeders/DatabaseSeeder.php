@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Deck;
+use App\Models\Flashcard;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,5 +26,9 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+        Deck::factory()->create();
+
+        Flashcard::factory(10)->create();
     }
 }
