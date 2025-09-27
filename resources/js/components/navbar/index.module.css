@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 300px;
+    width: 260px;
     padding: var(--mantine-spacing-md);
     background-color: var(--mantine-color-body);
     border-right: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
@@ -30,6 +30,8 @@
 }
 
 .mainLink {
+    color: var(--mantine-color-gray-7);
+    transition: color 0.2s, background 0.2s;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,7 +41,7 @@
     font-weight: 500;
     color: var(--mantine-color-gray-7);
     width: 100%;
-    font-size: var(--mantine-font-size-xs);
+    /*font-size: var(--mantine-font-size-xs);*/
 
     &:hover {
         background-color: var(--mantine-color-gray-0);
@@ -54,6 +56,17 @@
             color: var(--mantine-color-white);
         }
     }
+}
+
+.mainLink:hover {
+    background: var(--mantine-color-gray-1);
+}
+
+.activeLink {
+    color: var(--mantine-color-blue-8);
+    font-weight: 600;
+    border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+    border-radius: 8px;
 }
 
 .mainLinkInner {
@@ -98,7 +111,7 @@
     border-radius: var(--mantine-radius-sm);
     color: var(--mantine-color-gray-7);
     width: 100%;
-    font-size: var(--mantine-font-size-xs);
+    /*font-size: var(--mantine-font-size-xs);*/
 
     &:hover {
         background-color: var(--mantine-color-gray-0);
@@ -117,7 +130,7 @@
 
 .searchCode {
     font-weight: 700;
-    font-size: rem(10px);
+    /*font-size: rem(10px);*/
     background-color: var(--mantine-color-gray-0);
     border: rem(1px) solid var(--mantine-color-gray-2);
 
@@ -131,7 +144,7 @@
 /* Main content adjustment for desktop */
 @media (min-width: 800px) {
     .mainContent {
-        margin-left: 300px;
+        margin-left: 260px;
     }
 }
 

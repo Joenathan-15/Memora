@@ -1,13 +1,18 @@
 import { usePage } from "@inertiajs/react";
-import type { SharedData } from "@/types";
-import { dashboard, home, login, logout, register } from '@/wayfinder/routes';
+import type { SharedData, LayoutProps } from "@/types";
+import {
+    welcome,
+    login,
+    logout,
+    register,
+} from '@/wayfinder/routes';
 import { Flex } from '@mantine/core';
-import { useMantineColorScheme, Group, Text } from '@mantine/core';
+import { useMantineColorScheme, Group } from '@mantine/core';
 import Link from '@/components/link';
 import RootLayout from '@/layouts/root-layout';
-import { LayoutProps } from '@/types';
+import { home as homeRoute } from '@/wayfinder/routes';
 
-function GuestLayout({ child }: LayoutProps) {
+export default function GuestLayout({ child }: LayoutProps) {
     const { auth } = usePage<SharedData>().props;
     const { setColorScheme, clearColorScheme } = useMantineColorScheme();
 
@@ -16,12 +21,12 @@ function GuestLayout({ child }: LayoutProps) {
             <header className="flex justify-between border-b" style={{ borderColor: 'var(--mantine-color-default-border)' }}>
                 <nav>
                     <Flex gap={12}>
-                        <Link mr={10} href={home()}>
+                        <Link mr={10} href={welcome()}>
                             Memora
                         </Link>
                         {auth.user ? (
                             <>
-                                <Link href={dashboard()}>Dashboard</Link>
+                                <Link href={homeRoute()}>Dashboard</Link>
                                 <Link href={logout()}>Logout</Link>
                             </>
                         ) : (
@@ -47,4 +52,4 @@ function GuestLayout({ child }: LayoutProps) {
 
 GuestLayout.layout = (page: React.ReactNode) => <RootLayout child={page} />;
 
-export default GuestLayout;
+

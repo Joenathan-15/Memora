@@ -5,12 +5,12 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
-})->name('home');
+})->name('welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
+    Route::get('home', function () {
         return Inertia::render('dashboard');
-    })->name('dashboard');
+    })->name('home');
 });
 
 Route::get('/tmp', fn () => Inertia::render('settings/two-factor'));

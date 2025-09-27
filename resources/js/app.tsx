@@ -19,7 +19,12 @@ createInertiaApp({
         const root = createRoot(el);
 
         root.render(
-            <MantineProvider defaultColorScheme="dark">
+            <MantineProvider
+                defaultColorScheme="dark"
+                theme={{
+                    defaultRadius: 'lg',
+                }}
+            >
                 <App {...props} />
             </MantineProvider>
         );

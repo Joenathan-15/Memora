@@ -23,7 +23,6 @@ export default function FlashcardDeckCard() {
         <Card
             withBorder
             padding="lg"
-            radius="md"
             className="transition-all duration-300 hover:cursor-pointer group-hover:opacity-50 hover:!opacity-100 hover:scale-105"
         >
             <Group mt="-8" justify="space-between">

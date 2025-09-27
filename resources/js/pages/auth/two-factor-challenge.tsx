@@ -52,9 +52,13 @@ export default function TwoFactorChallenge() {
                 <Head title="Two-Factor Authentication" />
 
                 <Stack gap="xs" mb={20}>
-                    <Text size="lg" fw={500}>{authConfigContent.title}</Text>
+                    <Text size="lg" fw={500}>
+                        {authConfigContent.title}
+                    </Text>
 
-                    <Text size="sm" c="dimmed">{authConfigContent.description}</Text>
+                    <Text size="sm" c="dimmed">
+                        {authConfigContent.description}
+                    </Text>
                 </Stack>
 
                 <Form
@@ -90,7 +94,11 @@ export default function TwoFactorChallenge() {
                                             inputMode="numeric"
                                         />
 
-                                        <input type="hidden" name="code" value={code} />
+                                        <input
+                                            type="hidden"
+                                            name="code"
+                                            value={code}
+                                        />
 
                                         {errors?.code && (
                                             <Text size="sm" c="red">
@@ -101,7 +109,11 @@ export default function TwoFactorChallenge() {
                                 </Center>
                             )}
 
-                            <Button type="submit" fullWidth loading={processing}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                loading={processing}
+                            >
                                 Continue
                             </Button>
 
@@ -114,7 +126,9 @@ export default function TwoFactorChallenge() {
                                     type="submit"
                                     variant="outline"
                                     size="xs"
-                                    onClick={() => toggleRecoveryMode(clearErrors)}
+                                    onClick={() =>
+                                        toggleRecoveryMode(clearErrors)
+                                    }
                                 >
                                     {authConfigContent.toggleText}
                                 </Button>
@@ -123,7 +137,6 @@ export default function TwoFactorChallenge() {
                     )}
                 </Form>
             </Card>
-
         </Center>
     );
 }

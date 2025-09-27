@@ -10,15 +10,24 @@ type Props = {
     type: 'guest' | 'auth';
 };
 
-export default function CenteredCardLayout({ child, title, description, type }: Props) {
+export default function CenteredCardLayout({
+    child,
+    title,
+    description,
+    type,
+}: Props) {
     return (
         <Center style={{ width: '100%', height: '100vh' }}>
             <Card p="lg" w={400} withBorder shadow="sm">
                 <Head title={title} />
 
                 <Stack gap="xs" mb={20}>
-                    <Text size="lg" fw={500}>{title}</Text>
-                    <Text size="sm" c="dimmed">{description}</Text>
+                    <Text size="lg" fw={500}>
+                        {title}
+                    </Text>
+                    <Text size="sm" c="dimmed">
+                        {description}
+                    </Text>
                 </Stack>
 
                 {child}

@@ -1,88 +1,62 @@
-import { IconUpload, IconBook, IconClock, IconStar, IconPlus, IconUser, IconSearch } from '@tabler/icons-react';
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Code,
-    Group,
-    ScrollArea,
-    Text,
-    TextInput,
-    UnstyledButton,
-} from '@mantine/core';
-import { UserButton } from '@/components/navbar/user-button';
+    IconHome,
+    IconMap,
+    IconCirclePlus,
+    IconBuildingStore,
+    IconUser,
+} from '@tabler/icons-react';
+import { Stack, Text, UnstyledButton } from '@mantine/core';
 import classes from './index.module.css';
 import Link from '@/components/link';
+import { usePage } from '@inertiajs/react';
 
 const mainLinks = [
-    { icon: IconUpload, label: 'Upload PDF', url: '/upload' },
-    { icon: IconBook, label: 'All Decks', url: '/decks' },
-    { icon: IconClock, label: 'Due for Review', url: '/decks/due', notifications: 5 },
-    { icon: IconPlus, label: 'Create Deck', url: '/decks/create' },
-    { icon: IconUser, label: 'Profile', url: '/profile' },
-];
-
-const decks = [
-    { emoji: '📘', label: 'Biology 101' },
-    { emoji: '📗', label: 'World History' },
-    { emoji: '📕', label: 'Spanish Vocabulary' },
-    { emoji: '📙', label: 'Physics Formulas' },
-    { emoji: '📒', label: 'Chemistry Reactions' },
+    { icon: IconHome, label: 'Home', url: '/home', name: 'upload' },
+    { icon: IconMap, label: 'Explore', url: '/explore', name: 'decks.index' },
+    { icon: IconCirclePlus, label: 'Create Deck', url: '/decks/create', name: 'decks.create' },
+    { icon: IconBuildingStore, label: 'Store', url: '/store', name: 'decks.due' },
+    { icon: IconUser, label: 'Profile', url: '/profile', name: 'profile' },
 ];
 
 export function Navbar() {
+    const { url, component } = usePage(); // url = current path, component = current inertia page
+
     return (
         <nav className={classes.navbar}>
-            <div className={classes.section}>
-                <UserButton />
-            </div>
+            <Text
+                size="xl"
+                variant="gradient"
+                gradient={{ from: 'cyan', to: 'blue', deg: 226 }}
+                className="tracking-widest"
+                mx={12}
+            >
+                Memora
+            </Text>
+            <Stack className={classes.section}>
+                {mainLinks.map((link) => {
+                    const isActive = url.startsWith(link.url);
+                    {url.startsWith(link.url)}
 
-            <TextInput
-                placeholder="Search decks or flashcards..."
-                size="xs"
-                leftSection={<IconSearch size={12} stroke={1.5} />}
-                rightSectionWidth={70}
-                rightSection={<Code className={classes.searchCode}>Ctrl + K</Code>}
-                styles={{ section: { pointerEvents: 'none' } }}
-                mb="sm"
-            />
-
-            <div className={classes.section}>
-                {mainLinks.map((link) => (
-                    <Link href={link.url} underline="never" component={UnstyledButton} key={link.label} className={classes.mainLink}>
-                        <div className={classes.mainLinkInner}>
-                            <link.icon size={20} className={classes.mainLinkIcon} stroke={1.5} />
-                            <span>{link.label}</span>
-                        </div>
-                        {link.notifications && (
-                            <Badge size="sm" variant="filled" className={classes.mainLinkBadge}>
-                                {link.notifications}
-                            </Badge>
-                        )}
-                    </Link>
-                ))}
-            </div>
-
-            <div className={`${classes.section} ${classes.collectionsSection}`}>
-                <Group className={classes.collectionsHeader} justify="space-between">
-                    <Text size="xs" fw={500} c="dimmed">
-                        Decks
-                    </Text>
-                </Group>
-
-                <div className={classes.collectionsContainer}>
-                    <ScrollArea className={classes.collectionsScroll}>
-                        {decks.map((deck) => (
-                            <UnstyledButton key={deck.label} className={classes.collectionLink}>
-                                <Box component="span" mr={8} fz={16}>
-                                    {deck.emoji}
-                                </Box>
-                                {deck.label}
-                            </UnstyledButton>
-                        ))}
-                    </ScrollArea>
-                </div>
-            </div>
+                    return (
+                        <Link
+                            href={link.url}
+                            underline="never"
+                            component={UnstyledButton}
+                            key={link.label}
+                            className={`${classes.mainLink} ${isActive ? classes.activeLink : ''}`}
+                        >
+                            <div className={classes.mainLinkInner}>
+                                <link.icon
+                                    size={20}
+                                    className={classes.mainLinkIcon}
+                                    stroke={1.5}
+                                />
+                                <span>{link.label}</span>
+                            </div>
+                        </Link>
+                    );
+                })}
+            </Stack>
         </nav>
     );
 }
