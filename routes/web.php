@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Deck;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -9,7 +10,11 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
-        return Inertia::render('dashboard');
+        return Inertia::render('dashboard', [
+            'decks' => Deck::select(['title', 'created_at'])
+                ->where('user_Id', '=', auth()->user()->id)
+                ->get(),
+        ]);
     })->name('home');
 });
 

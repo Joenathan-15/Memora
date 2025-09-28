@@ -73,6 +73,9 @@
     display: flex;
     align-items: center;
     flex: 1;
+    text-transform: uppercase !important;
+    font-size: var(--mantine-font-size-sm);
+    font-weight: 800;
 }
 
 .mainLinkIcon {

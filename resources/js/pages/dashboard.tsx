@@ -9,6 +9,7 @@ import {
     Container,
     SimpleGrid,
     ThemeIcon,
+    Flex,
 } from '@mantine/core';
 import {
     IconUpload,
@@ -18,60 +19,82 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import CardStats from '@/components/card-stats'
 
-function Dashboard() {
+interface Deck {
+    title: string;
+    created_at: string;
+}
+
+interface Props {
+    decks: Deck[];
+}
+
+function Dashboard({decks}: Props) {
     const isMobile = useMediaQuery('(max-width: 800px)');
-    const isTiny = useMediaQuery('(max-width: 450px)');
 
     return (
         <>
             <Head title="Dashboard" />
 
             <Container fluid>
-                <Stack gap="xl">
-
-                    {/* Quick Upload Section */}
-                    <Card withBorder>
-                        <Stack gap="md">
-                            <Group justify="space-between">
-                                <div>
-                                    <Text fw={500}>Quick Upload</Text>
-                                    <Text size="sm" c="dimmed">
-                                        Send us your study material and get ready-to-review flashcards in seconds.
-                                    </Text>
-                                </div>
-                                <ThemeIcon size="xl" variant="light" color="blue">
-                                    <IconUpload size={24} />
-                                </ThemeIcon>
-                            </Group>
-
-                            <Group gap="sm">
-                                <Button
-                                    leftSection={<IconFileText size={16} />}
-                                    variant="filled"
-                                    size={isMobile ? 'sm' : 'md'}
-                                >
-                                    Upload PDF
-                                </Button>
-                                <Button
-                                    leftSection={<IconPresentation size={16} />}
-                                    variant="outline"
-                                    size={isMobile ? 'sm' : 'md'}
-                                >
-                                    Upload PowerPoint
-                                </Button>
-                            </Group>
-                        </Stack>
-                    </Card>
-
+                <Flex
+                    direction={{ base: 'column', md: 'row' }}
+                    gap="xl"
+                    justify={{ sm: 'center' }}
+                >
                     <SimpleGrid
-                        cols={{ base: 2, md: 3 }}
+                        cols={{ base: 2, lg: 3 }}
                         // className="group"
                     >
-                        {[...Array(10)].map((x, i) => (
-                            <CardStats key={i} />
+                        {decks.map((deck, i) => (
+                            <>
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} />
+                            </>
                         ))}
                     </SimpleGrid>
-                </Stack>
+
+                    {/* Quick Upload Section */}
+                    <div>
+                        <Card withBorder>
+                            <Stack gap="md">
+                                <Flex align="center" justify="space-between" gap="lg">
+                                    <div>
+                                        <Text fw={500}>Quick Upload</Text>
+                                        <Text size="sm" c="dimmed">
+                                            Send us your study material and get flashcards in seconds.
+                                        </Text>
+                                    </div>
+                                    <ThemeIcon size="xl" variant="light" color="blue">
+                                        <IconUpload size={24} />
+                                    </ThemeIcon>
+                                </Flex>
+
+                                <Group gap="sm">
+                                    <Button
+                                        leftSection={<IconFileText size={16} />}
+                                        variant="filled"
+                                        size={isMobile ? 'sm' : 'md'}
+                                    >
+                                        Upload PDF
+                                    </Button>
+                                    <Button
+                                        leftSection={<IconPresentation size={16} />}
+                                        variant="outline"
+                                        size={isMobile ? 'sm' : 'md'}
+                                    >
+                                        Upload PowerPoint
+                                    </Button>
+                                </Group>
+                            </Stack>
+                        </Card>
+                    </div>
+                </Flex>
             </Container>
         </>
     );

@@ -7,7 +7,11 @@ const stats = [
     { title: 'Confident', value: '12' },
 ];
 
-export default function FlashcardDeckCard() {
+interface Props {
+    title: string;
+}
+
+export default function FlashcardDeckCard({ title }: Props) {
     const items = stats.map((stat) => (
         <div key={stat.title}>
             <Text size="xs" c="dimmed">
@@ -23,7 +27,7 @@ export default function FlashcardDeckCard() {
         <Card
             withBorder
             padding="lg"
-            className="transition-all duration-300 hover:cursor-pointer group-hover:opacity-50 hover:!opacity-100 hover:scale-105"
+            className="transition-all duration-300 group-hover:opacity-50 hover:scale-105 hover:cursor-pointer hover:!opacity-100"
         >
             <Group mt="-8" justify="space-between">
                 <span>🧠</span>
@@ -31,7 +35,7 @@ export default function FlashcardDeckCard() {
             </Group>
 
             <Group justify="space-between" mt="sm">
-                <Text className={classes.title}>Spanish Vocabulary</Text>
+                <Text className={classes.title}>{title}</Text>
                 <Group gap={5}>
                     <Text fz="xs" c="dimmed">
                         75% confident
