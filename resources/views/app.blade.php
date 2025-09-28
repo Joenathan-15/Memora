@@ -8,11 +8,11 @@
             html, body {
                 height: 100%;
                 margin: 0;
-                overflow: hidden;
+                overflow-y: auto;
             }
 
-            body[data-loaded="true"] {
-                overflow-y: auto;
+            body[data-loaded="false"] {
+                overflow: hidden;
             }
 
             @media (prefers-color-scheme: dark) {
@@ -32,7 +32,7 @@
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         @inertiaHead
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" data-loaded="true">
         @inertia
     </body>
 </html>
