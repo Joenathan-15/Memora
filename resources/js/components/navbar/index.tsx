@@ -13,7 +13,7 @@ import { usePage } from '@inertiajs/react';
 const mainLinks = [
     { icon: IconHome, label: 'Home', url: '/home', name: 'upload' },
     { icon: IconMap, label: 'Explore', url: '/explore', name: 'decks.index' },
-    { icon: IconCirclePlus, label: 'Create Deck', url: '/decks/create', name: 'decks.create' },
+    { icon: IconCirclePlus, label: 'Create Deck', url: '/create', name: 'decks.create' },
     { icon: IconBuildingStore, label: 'Store', url: '/store', name: 'decks.due' },
     { icon: IconUser, label: 'Profile', url: '/profile', name: 'profile' },
 ];
@@ -35,13 +35,11 @@ export function Navbar() {
             <Stack className={classes.section}>
                 {mainLinks.map((link) => {
                     const isActive = url.startsWith(link.url);
-                    {url.startsWith(link.url)}
 
                     return (
                         <Link
                             href={link.url}
                             underline="never"
-                            component={UnstyledButton}
                             key={link.label}
                             className={`${classes.mainLink} ${isActive ? classes.activeLink : ''}`}
                         >

@@ -1,4 +1,4 @@
-import { Badge, Card, Group, Text } from '@mantine/core';
+import { Badge, Card, Flex, Group, Text } from '@mantine/core';
 import classes from './index.module.css';
 
 const stats = [
@@ -34,16 +34,10 @@ export default function FlashcardDeckCard({ title }: Props) {
                 <Badge color="green">Ready</Badge>
             </Group>
 
-            <Group justify="space-between" mt="sm">
-                <Text className={classes.title}>{title}</Text>
-                <Group gap={5}>
-                    <Text fz="xs" c="dimmed">
-                        75% confident
-                    </Text>
-                </Group>
-            </Group>
-            <Text mt="sm" mb="md" c="dimmed" fz="xs">
-                Last studied: Today • Created: 2 months ago
+            <Text mt="sm" className={classes.title}>{title}</Text>
+
+            <Text mb="md" c="dimmed" fz="xs" mt="auto">
+                Last studied: Today • Created: 2 months ago • 75% confident
             </Text>
             <Card.Section className={classes.footer}>{items}</Card.Section>
         </Card>

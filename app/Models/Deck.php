@@ -26,6 +26,10 @@ class Deck extends Model
         'deleted_at'
     ];
 
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
+
     public function user(): BelongsTo {
         return $this->belongsTo(User::class);
     }

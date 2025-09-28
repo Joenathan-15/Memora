@@ -48,13 +48,6 @@ function Dashboard({decks}: Props) {
                         {decks.map((deck, i) => (
                             <>
                                 <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
-                                <CardStats key={i} title={deck.title} />
                             </>
                         ))}
                     </SimpleGrid>
