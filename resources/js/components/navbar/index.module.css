@@ -42,6 +42,7 @@
     color: var(--mantine-color-gray-7);
     width: 100%;
     /*font-size: var(--mantine-font-size-xs);*/
+    border-radius: var(--mantine-radius-lg);
 
     &:hover {
         background-color: var(--mantine-color-gray-0);
@@ -63,10 +64,10 @@
 }
 
 .activeLink {
+    border-radius: var(--mantine-radius-lg);
     color: var(--mantine-color-blue-8);
     font-weight: 600;
     border: 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-    border-radius: 8px;
 }
 
 .mainLinkInner {
