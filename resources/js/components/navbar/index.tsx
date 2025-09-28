@@ -25,10 +25,10 @@ export function Navbar() {
         <nav className={classes.navbar}>
             <Text
                 size="xl"
-                variant="gradient"
-                gradient={{ from: 'cyan', to: 'blue', deg: 226 }}
+                c="blue"
                 className="tracking-widest"
                 mx={12}
+                fw={800}
             >
                 Memora
             </Text>
