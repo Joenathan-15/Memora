@@ -24,10 +24,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/create', [DeckController::class, 'create'])->name('create');
     Route::post('/create', [DeckController::class, 'store'])->name('store');
-    Route::get('/decks/{deck}/ai-status', [DeckController::class, 'getAiStatus'])->name('decks.ai-status');
-});
 
-Route::get('/tmp', fn () => Inertia::render('settings/two-factor'));
+    Route::get('/explore', fn() => Inertia::render('explore'))->name('explore');
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
