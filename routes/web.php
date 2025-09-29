@@ -27,10 +27,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/create', [DeckController::class, 'create'])->name('create');
     Route::post('/create', [DeckController::class, 'store'])->name('store');
 
-    Route::get('/decks/{deck}', [DeckController::class, 'show'])->name('decks.show');
-    Route::get('/decks/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');
-    Route::post('/decks/{deck}/flashcards/{flashcard}/review', [DeckController::class, 'reviewCard']);
+    Route::prefix("/decks")->group(function () {
+        // Get decks
+        Route::get('/{deck}', [DeckController::class, 'show'])->name('decks.show');
+
+        // Edit decks
+        Route::get('/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');
+        Route::put('/{id}', [DeckController::class, 'update'])->name('decks.update');
+
+        // Review decks
+        Route::post('/{deck}/flashcards/{flashcard}/review', [DeckController::class, 'reviewCard']);
+    });
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';

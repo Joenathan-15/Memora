@@ -69,7 +69,6 @@ class DeckController extends Controller
                 ->with('success', 'Deck created successfully!');
         } catch (Throwable $e) {
             report($e);
-            dd($e);
             return back()->withErrors(['error' => 'Failed to create deck. Please try again.']);
         }
     }
@@ -141,16 +140,32 @@ class DeckController extends Controller
     public function edit(Deck $deck)
     {
         return Inertia::render('decks/edit', [
-            'deck' => $deck,
+            'deck' => $deck->load('flashcards'),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Deck $deck)
+    public function update(Request $request, int $id)
     {
-        //
+        try {
+            $deck = Deck::findOrFail($id);
+        } catch (\Exception $e) {
+            return redirect()->route('home')
+                ->with('error', 'Deck not found.');
+        }
+
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'is_public'   => 'required|boolean',
+        ]);
+
+        $deck->update($validated);
+
+        return redirect()->route('home')
+            ->with('success', 'Deck updated successfully!');
     }
 
     /**
