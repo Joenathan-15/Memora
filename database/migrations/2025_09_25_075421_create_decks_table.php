@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('decks', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
             $table->string('description')->nullable();

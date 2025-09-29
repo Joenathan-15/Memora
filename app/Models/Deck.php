@@ -13,6 +13,7 @@ class Deck extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
+        'uuid',
         'title',
         'description',
         'is_public',

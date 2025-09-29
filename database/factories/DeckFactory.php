@@ -12,6 +12,7 @@ class DeckFactory extends Factory
     public function definition(): array
     {
         return [
+            'uuid' => $this->faker->uuid(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'is_public' => $this->faker->boolean(),
