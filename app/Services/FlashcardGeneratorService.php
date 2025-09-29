@@ -45,8 +45,6 @@ class FlashcardGeneratorService
                 required: ["title", "description", "flashcards"]
             )
         );
-
-        // 3. Create a clear prompt for the AI model.
         $prompt = "Based on the following text from a document, please:
                     1. Detect the language of the provided text.
                     2. Use that same language consistently in your response.
@@ -57,12 +55,10 @@ class FlashcardGeneratorService
                     Ensure the flashcards are accurate, easy to understand, and focused on key concepts, facts, or definitions.
                     Here is the text:\n\n" . $parsedText;
 
-        // 4. Call the Gemini API with the prompt and configuration.
         $response = Gemini::generativeModel(model: "gemini-2.0-flash-lite")
             ->withGenerationConfig($config)
             ->generateContent($prompt);
 
-        // 5. Decode the JSON response and return it as an array.
         return json_decode(json_encode($response->json()), true);
     }
 
@@ -78,7 +74,6 @@ class FlashcardGeneratorService
             $parser = new Parser();
             return $parser->parseFile($file->getPathname())->getText();
         } catch (Exception $err) {
-            // It's often better to throw an exception and let the controller handle the HTTP response.
             abort(500, "Error parsing the PDF file. Please try again later.");
         }
     }
