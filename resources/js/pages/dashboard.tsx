@@ -1,35 +1,36 @@
-import { Head } from '@inertiajs/react';
+import CardStats from '@/components/card-stats';
 import AuthLayout from '@/layouts/auth-layout';
+import { Link,Head } from '@inertiajs/react';
 import {
-    Text,
-    Card,
     Button,
-    Group,
-    Stack,
+    Card,
     Container,
-    SimpleGrid,
-    ThemeIcon,
     Flex,
+    Group,
+    SimpleGrid,
+    Stack,
+    Text,
+    ThemeIcon,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
-    IconUpload,
     IconFileText,
     IconPresentation,
+    IconUpload,
 } from '@tabler/icons-react';
-import { useMediaQuery } from '@mantine/hooks';
-import CardStats from '@/components/card-stats'
 
 interface Deck {
     uuid: string;
     title: string;
     created_at: string;
+    flashcards_count: number;
 }
 
 interface Props {
     decks: Deck[];
 }
 
-export default function Dashboard({decks}: Props) {
+export default function Dashboard({ decks }: Props) {
     const isMobile = useMediaQuery('(max-width: 800px)');
 
     return (
@@ -43,17 +44,21 @@ export default function Dashboard({decks}: Props) {
                     justify={{ sm: 'center' }}
                     align="flex-start"
                 >
-                    <SimpleGrid
-                        cols={{ base: 1, lg: 3, xs: 2 }}
-                    >
+                    <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
                         {decks.map((deck, i) => (
-                            <CardStats key={i} title={deck.title} href={deck.uuid} />
+                            <CardStats
+                                key={i}
+                                title={deck.title}
+                                href={deck.uuid}
+                                cards={deck.flashcards_count}
+                                created_at={deck.created_at}
+                            />
                         ))}
                     </SimpleGrid>
 
                     {/* Quick Upload Section */}
                     <Stack
-                        gap={"md"}
+                        gap={'md'}
                         style={{
                             position: 'sticky',
                             top: 20,
@@ -62,14 +67,23 @@ export default function Dashboard({decks}: Props) {
                     >
                         <Card withBorder>
                             <Stack gap="md">
-                                <Flex align="center" justify="space-between" gap="lg">
+                                <Flex
+                                    align="center"
+                                    justify="space-between"
+                                    gap="lg"
+                                >
                                     <div>
                                         <Text fw={500}>Quick Upload</Text>
                                         <Text size="sm" c="dimmed">
-                                            Send us your study material and get flashcards in seconds.
+                                            Send us your study material and get
+                                            flashcards in seconds.
                                         </Text>
                                     </div>
-                                    <ThemeIcon size="xl" variant="light" color="blue">
+                                    <ThemeIcon
+                                        size="xl"
+                                        variant="light"
+                                        color="blue"
+                                    >
                                         <IconUpload size={24} />
                                     </ThemeIcon>
                                 </Flex>
@@ -80,10 +94,14 @@ export default function Dashboard({decks}: Props) {
                                         variant="default"
                                         size={isMobile ? 'sm' : 'md'}
                                     >
-                                        Upload PDF
+                                        <Link href={`/create`} as="a">
+                                            Upload PDF
+                                        </Link>
                                     </Button>
                                     <Button
-                                        leftSection={<IconPresentation size={16} />}
+                                        leftSection={
+                                            <IconPresentation size={16} />
+                                        }
                                         variant="default"
                                         size={isMobile ? 'sm' : 'md'}
                                     >
@@ -97,8 +115,18 @@ export default function Dashboard({decks}: Props) {
                             <Stack gap="md">
                                 <Stack gap="md">
                                     <Stack gap="0" w="100%" align="center">
-                                        <Text fw={500}>Using an ad blocker?</Text>
-                                        <Text fw={500} size="sm" c="dimmed" ta="center">Stay sharp with Super and skip the ads</Text>
+                                        <Text fw={500}>
+                                            Using an ad blocker?
+                                        </Text>
+                                        <Text
+                                            fw={500}
+                                            size="sm"
+                                            c="dimmed"
+                                            ta="center"
+                                        >
+                                            Stay sharp with Super and skip the
+                                            ads
+                                        </Text>
                                     </Stack>
                                 </Stack>
 
@@ -128,4 +156,3 @@ export default function Dashboard({decks}: Props) {
 }
 
 Dashboard.layout = (page: React.ReactNode) => <AuthLayout child={page} />;
-
