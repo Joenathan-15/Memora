@@ -50,7 +50,7 @@ class FlashcardGeneratorService
                     2. Use that same language consistently in your response.
                     Then, generate the following based on the content:
                     - A concise and relevant title
-                    - A short and clear description (summary)
+                    - A short and clear description summary (max: 100 characters )
                     - A series of question-and-answer flashcards to help a user study the material
                     Ensure the flashcards are accurate, easy to understand, and focused on key concepts, facts, or definitions.
                     Here is the text:\n\n" . $parsedText;
@@ -72,7 +72,8 @@ class FlashcardGeneratorService
     {
         try {
             $parser = new Parser();
-            return $parser->parseFile($file->getPathname())->getText();
+            $rawText = $parser->parseFile($file->getPathname())->getText();
+            return mb_convert_encoding($rawText, 'UTF-8', 'UTF-8');
         } catch (Exception $err) {
             abort(500, "Error parsing the PDF file. Please try again later.");
         }

@@ -69,6 +69,7 @@ class DeckController extends Controller
                 ->with('success', 'Deck created successfully!');
         } catch (Throwable $e) {
             report($e);
+            dd($e);
             return back()->withErrors(['error' => 'Failed to create deck. Please try again.']);
         }
     }
