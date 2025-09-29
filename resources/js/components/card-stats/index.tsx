@@ -27,7 +27,7 @@ export default function FlashcardDeckCard({ title }: Props) {
         <Card
             withBorder
             padding="lg"
-            className="transition-all duration-300 group-hover:opacity-50 hover:scale-105 hover:cursor-pointer hover:!opacity-100"
+            className={`${classes.card} group-hover:opacity-50 hover:cursor-pointer hover:!opacity-100 transition`}
         >
             <Group mt="-8" justify="space-between">
                 <span>🧠</span>

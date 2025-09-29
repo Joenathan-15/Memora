@@ -53,7 +53,7 @@ function Dashboard({decks}: Props) {
                     </SimpleGrid>
 
                     {/* Quick Upload Section */}
-                    <div>
+                    <Stack gap={"md"}>
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex align="center" justify="space-between" gap="lg">
@@ -71,14 +71,14 @@ function Dashboard({decks}: Props) {
                                 <Group gap="sm">
                                     <Button
                                         leftSection={<IconFileText size={16} />}
-                                        variant="filled"
+                                        variant="default"
                                         size={isMobile ? 'sm' : 'md'}
                                     >
                                         Upload PDF
                                     </Button>
                                     <Button
                                         leftSection={<IconPresentation size={16} />}
-                                        variant="outline"
+                                        variant="default"
                                         size={isMobile ? 'sm' : 'md'}
                                     >
                                         Upload PowerPoint
@@ -86,7 +86,35 @@ function Dashboard({decks}: Props) {
                                 </Group>
                             </Stack>
                         </Card>
-                    </div>
+
+                        <Card withBorder>
+                            <Stack gap="md">
+                                <Stack gap="md">
+                                    <Stack gap="0" w="100%" align="center">
+                                        <Text fw={500}>Using an ad blocker?</Text>
+                                        <Text fw={500} size="sm" c="dimmed" ta="center">Stay sharp with Super and skip the ads</Text>
+                                    </Stack>
+                                </Stack>
+
+                                <Group gap="sm" align="center">
+                                    <Button
+                                        variant="filled"
+                                        size={isMobile ? 'sm' : 'md'}
+                                        w="100%"
+                                    >
+                                        Try Super for Free
+                                    </Button>
+                                    <Button
+                                        variant="subtle"
+                                        size={isMobile ? 'sm' : 'md'}
+                                        w="100%"
+                                    >
+                                        Disable ad blocker
+                                    </Button>
+                                </Group>
+                            </Stack>
+                        </Card>
+                    </Stack>
                 </Flex>
             </Container>
         </>
