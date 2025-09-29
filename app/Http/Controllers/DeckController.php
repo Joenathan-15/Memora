@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Deck;
+use App\Models\Flashcard;
+use App\Services\FlashcardGeneratorService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Throwable;
@@ -28,7 +30,7 @@ class DeckController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, FlashcardGeneratorService $flashcardGenerator)
     {
         try {
             $validated = $request->validate([
@@ -48,21 +50,28 @@ class DeckController extends Controller
             if ($request->hasFile('ai_file')) {
                 $path = $request->file('ai_file')->store('decks/ai_uploads', 'public');
                 $attributes['ai_file_path'] = $path;
-
-                // trigger AI processing service/job here
-                // e.g., dispatch(new ProcessDeckAI($path, $request->user()->id));
+                $items = $flashcardGenerator->generateFlashcardsFromPdf($request->file("ai_file"));
+                $attributes["title"] = $items["title"];
+                $attributes["description"] = $items["description"];
             }
-
             $deck = Deck::create($attributes);
 
+            if (isset($items["flashcards"])) {
+                foreach ($items["flashcards"] as $item) {
+                    Flashcard::create([
+                        'question' => $item["question"],
+                        'answer' => $item["answer"],
+                        'deck_id' => $deck["id"],
+                    ]);
+                }
+            }
             return redirect()->route('home')
                 ->with('success', 'Deck created successfully!');
         } catch (Throwable $e) {
-        report($e);
-
-        return back()->withErrors(['error' => 'Failed to create deck. Please try again.']);
+            report($e);
+            return back()->withErrors(['error' => 'Failed to create deck. Please try again.']);
+        }
     }
-}
 
     /**
      * Display the specified resource.
@@ -164,11 +173,11 @@ class DeckController extends Controller
         $review = $flashcard->getOrCreateUserReview();
         $review->updateReview($quality);
 
-//        return response()->json([
-//            'success' => true,
-//            'next_review_date' => $review->next_review_date->format('Y-m-d'),
-//            'interval' => $review->interval,
-//        ]);
+        //        return response()->json([
+        //            'success' => true,
+        //            'next_review_date' => $review->next_review_date->format('Y-m-d'),
+        //            'interval' => $review->interval,
+        //        ]);
         return redirect()->route('decks.show', $deck->uuid, 303);
     }
 }
