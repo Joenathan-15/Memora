@@ -7,14 +7,16 @@ import RootLayout from '@/layouts/root-layout';
 import { LayoutProps } from '@/types';
 import Navbar from '@/components/navbar';
 import classes from '@/components/navbar/index.module.css';
+import BottomNavbar from '@/components/bottom-navbar';
 
 function AuthLayout({ child }: LayoutProps) {
-    const isMobile = useMediaQuery('(max-width: 768px)');
+    const isMobile = false;
     document.body.dataset.loaded = "true";
 
     return (
         <>
             <Navbar />
+            <BottomNavbar />
 
             <Box
                 component="main"

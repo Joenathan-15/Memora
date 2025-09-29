@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        Deck::factory()->create();
+        Deck::factory(2)->create();
 
         Flashcard::factory(10)->create();
     }

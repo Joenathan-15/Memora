@@ -1,6 +1,7 @@
-import { Badge, Card, Group, Text } from '@mantine/core';
+import { ActionIcon, Badge, Card, Flex, Group, Text } from '@mantine/core';
 import classes from './index.module.css';
 import Link from '@/components/link';
+import { IconAdjustments } from '@tabler/icons-react';
 
 const stats = [
     { title: 'Cards', value: '50' },
@@ -13,7 +14,7 @@ interface Props {
     href?: string;
 }
 
-export default function FlashcardDeckCard({ title, href }: Props) {
+export default function CardStats({ title, href }: Props) {
     const items = stats.map((stat) => (
         <div key={stat.title}>
             <Text size="xs" c="dimmed">
@@ -29,14 +30,20 @@ export default function FlashcardDeckCard({ title, href }: Props) {
         <>
             <Group mt="-8" justify="space-between">
                 <span>🧠</span>
-                <Badge color="green">Ready</Badge>
+                <Flex align="center" gap="sm">
+                    <Badge color="green">Ready</Badge>
+                    <Link href={`decks/${href}/edit`}>
+                        <ActionIcon variant="default" aria-label="Edit">
+                            <IconAdjustments style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                        </ActionIcon>
+                    </Link>
+                </Flex>
             </Group>
 
             <Text
                 mt="sm"
                 className={classes.title}
                 lineClamp={2}
-                style={{ minHeight: 0 }}
             >
                 {title}
             </Text>

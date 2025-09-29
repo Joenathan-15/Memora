@@ -20,6 +20,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import CardStats from '@/components/card-stats'
 
 interface Deck {
+    uuid: string;
     title: string;
     created_at: string;
 }
@@ -28,7 +29,7 @@ interface Props {
     decks: Deck[];
 }
 
-function Dashboard({decks}: Props) {
+export default function Dashboard({decks}: Props) {
     const isMobile = useMediaQuery('(max-width: 800px)');
 
     return (
@@ -40,19 +41,25 @@ function Dashboard({decks}: Props) {
                     direction={{ base: 'column', md: 'row' }}
                     gap="xl"
                     justify={{ sm: 'center' }}
+                    align="flex-start"
                 >
                     <SimpleGrid
-                        cols={{ base: 2, lg: 3 }}
+                        cols={{ base: 1, lg: 3, xs: 2 }}
                     >
                         {decks.map((deck, i) => (
-                            <>
-                                <CardStats key={i} title={deck.title} href="1" />
-                            </>
+                            <CardStats key={i} title={deck.title} href={deck.uuid} />
                         ))}
                     </SimpleGrid>
 
                     {/* Quick Upload Section */}
-                    <Stack gap={"md"}>
+                    <Stack
+                        gap={"md"}
+                        style={{
+                            position: 'sticky',
+                            top: 20,
+                            alignSelf: 'flex-start',
+                        }}
+                    >
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex align="center" justify="space-between" gap="lg">
@@ -122,4 +129,3 @@ function Dashboard({decks}: Props) {
 
 Dashboard.layout = (page: React.ReactNode) => <AuthLayout child={page} />;
 
-export default Dashboard;

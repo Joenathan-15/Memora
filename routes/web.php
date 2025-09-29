@@ -9,10 +9,12 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('welcome');
 
+Route::get('/explore', fn() => Inertia::render('explore'))->name('explore');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
         return Inertia::render('dashboard', [
-            'decks' => Deck::select(['title', 'created_at'])
+            'decks' => Deck::select(['uuid', 'title', 'created_at'])
                 ->where('user_id', auth()->id())
                 ->get(),
         ]);
@@ -25,7 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/create', [DeckController::class, 'create'])->name('create');
     Route::post('/create', [DeckController::class, 'store'])->name('store');
 
-    Route::get('/explore', fn() => Inertia::render('explore'))->name('explore');
+    Route::get('/decks/{deck}', [DeckController::class, 'show'])->name('decks.show');
+    Route::get('/decks/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');
+    Route::post('/decks/{deck}/flashcards/{flashcard}/review', [DeckController::class, 'reviewCard']);
 });
 
 require __DIR__.'/settings.php';

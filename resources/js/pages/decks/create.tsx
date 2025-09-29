@@ -104,7 +104,7 @@ const CreateDeck: PageWithLayout = () => {
                 </Stack>
             </Box>
 
-            <Divider label="Or with AI" labelPosition="center" my="lg" />
+            <Divider label="or with AI" labelPosition="center" my="lg" />
 
             <Box component="form" onSubmit={handleAISubmit}>
                 <Stack gap="sm">

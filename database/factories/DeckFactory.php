@@ -13,7 +13,7 @@ class DeckFactory extends Factory
     {
         return [
             'uuid' => $this->faker->uuid(),
-            'title' => $this->faker->sentence(),
+            'title' => $this->faker->word(),
             'description' => $this->faker->paragraph(),
             'is_public' => $this->faker->boolean(),
 //            'user_id' => $this->faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
