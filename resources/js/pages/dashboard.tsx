@@ -43,11 +43,10 @@ function Dashboard({decks}: Props) {
                 >
                     <SimpleGrid
                         cols={{ base: 2, lg: 3 }}
-                        // className="group"
                     >
                         {decks.map((deck, i) => (
                             <>
-                                <CardStats key={i} title={deck.title} />
+                                <CardStats key={i} title={deck.title} href="1" />
                             </>
                         ))}
                     </SimpleGrid>
