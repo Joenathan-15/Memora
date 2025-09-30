@@ -19,19 +19,38 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::firstOrCreate(
+        // Create Admin User
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@example.com'],
             [
-                'email' => 'admin@example.com',
                 'name' => 'Admoon',
                 'password' => Hash::make('password4'),
                 'email_verified_at' => now(),
             ]
         );
 
-
-        UserInfo::firstOrCreate(
-            ['user_id' => 1,"subscription" => "free"],
+        // Create Normal User
+        $user = User::firstOrCreate(
+            ['email' => 'user@example.com'],
+            [
+                'name' => 'User',
+                'password' => Hash::make('password4'),
+                'email_verified_at' => now(),
+            ]
         );
+
+        // Create UserInfo for Admin
+        UserInfo::firstOrCreate(
+            ['user_id' => $admin->id],
+            ['subscription' => 'super']
+        );
+
+        // Create UserInfo for Normal User
+        UserInfo::firstOrCreate(
+            ['user_id' => $user->id],
+            ['subscription' => 'free']
+        );
+
 
         /**
          * 1. Bahasa Indonesia: Pungtuasi dan Penulisan
