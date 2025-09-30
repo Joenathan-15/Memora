@@ -22,8 +22,7 @@ import {
 export default function Welcome() {
     return (
         <>
-            <Head title="Welcome" />
-
+            <Head title="Explore" />
             <Container fluid p="md" h={"94vh"} pt={15}>
                 <Grid>
                     <Grid.Col span={{base: 12, md: 3}}>
@@ -77,7 +76,7 @@ export default function Welcome() {
                     <Grid.Col span={{base: 12, md: 9}}>
                         <Container fluid px={0}>
                             <ScrollArea h={'91vh'}>
-                                <SimpleGrid cols={{ base: 2, lg: 3 }} spacing="md">
+                                <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="md">
                                     {[...Array(30)].map((deck, i) => {
                                         const badges: Array<'featured' | 'trending' | undefined> = [
                                             'featured',
@@ -86,7 +85,6 @@ export default function Welcome() {
                                             undefined,
                                             undefined,
                                         ];
-
                                         const badge = badges[Math.floor(Math.random() * badges.length)];
 
                                         return <CardExplore key={i} title={"deck.title"} badge={badge} />;

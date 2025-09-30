@@ -1,4 +1,4 @@
-import { Badge, Card, Flex, Group, Text } from '@mantine/core';
+import { Badge, Card, Group, Text } from '@mantine/core';
 import classes from './index.module.css';
 
 const stats = [
@@ -39,11 +39,9 @@ export default function CardExplore({ title, badge }: Props) {
                 )}
             </Group>
 
-            <Text mt="sm" className={classes.title}>{title}</Text>
-
-            {/*<Text mb="md" c="dimmed" fz="xs" mt="auto">*/}
-            {/*    Created:  •*/}
-            {/*</Text>*/}
+            <Text mt="sm" className={classes.title}>
+                {title}
+            </Text>
             <Card.Section className={classes.footer}>{items}</Card.Section>
         </Card>
     );
