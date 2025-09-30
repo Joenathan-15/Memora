@@ -70,7 +70,7 @@ export default function Welcome({ decks }: Props) {
                                     ]}
                                 />
                             </Card>
-                            <Card withBorder>
+                            <Card withBorder h={{base: 250, md: 'auto'}}>
                                 <Text mb={12}>Category</Text>
                                 <ScrollArea h={'40vh'}>
                                     <Stack>
