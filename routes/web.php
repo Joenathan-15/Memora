@@ -4,6 +4,7 @@ use App\Http\Controllers\DeckController;
 use App\Http\Controllers\FlashcardController;
 use App\Models\Deck;
 use App\Models\Flashcard;
+use App\Models\FlashcardReview;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -28,6 +29,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return redirect()->route('home');
     })->name('dashboard');
+
+    Route::get('/profile', function () {
+        $streak = \App\Models\FlashcardReview::getStreak();
+
+        return Inertia::render('profile/index', [
+            'streak' => $streak,
+        ]);
+    });
+    Route::get('/profile/edit', fn () => Inertia::render('profile/edit'));
 
     Route::get('/create', [DeckController::class, 'create'])->name('create');
     Route::post('/create', [DeckController::class, 'store'])->name('store');

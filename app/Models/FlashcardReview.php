@@ -107,4 +107,38 @@ class FlashcardReview extends Model
         return $query->orderBy('next_review_date')
             ->orderBy('interval');
     }
+
+    /**
+     * Get the current streak (consecutive days with reviews).
+     */
+    public static function getStreak(int $userId = null): int
+    {
+        $userId = $userId ?? auth()->id();
+
+        $days = self::where('user_id', $userId)
+            ->whereNotNull('last_reviewed_at')
+            ->orderBy('last_reviewed_at', 'desc')
+            ->pluck('last_reviewed_at')
+            ->map(fn ($dt) => Carbon::parse($dt)->toDateString())
+            ->unique()
+            ->values();
+
+        if ($days->isEmpty()) {
+            return 0;
+        }
+
+        $streak = 0;
+        $expected = Carbon::today();
+
+        foreach ($days as $day) {
+            if ($day === $expected->toDateString()) {
+                $streak++;
+                $expected->subDay();
+            } else {
+                break;
+            }
+        }
+
+        return $streak;
+    }
 }
