@@ -21,9 +21,7 @@ Route::get('/explore', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
         return Inertia::render('dashboard', [
-            'decks' => Deck::select(['uuid', 'title', 'created_at'])->withCount('flashcards')
-                ->where('user_id', auth()->id())
-                ->get(),
+            'decks' => Deck::select(['uuid', 'title', 'created_at'])->withCount('flashcards')->where('user_id', auth()->id())->get(),
         ]);
     })->name('home');
 

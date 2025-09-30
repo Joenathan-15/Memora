@@ -21,8 +21,15 @@ class FlashcardGeneratorService
      */
     public function generateFlashcardsFromPdf(UploadedFile $file): array
     {
+        if (auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->subscription == "free") {
+            $pages = $this->countPages($file);
+            $cost = $pages * 100; // Example cost calculation: 100 gems per page
+            if (auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->gems < $cost) {
+                abort(402, "Insufficient gems. You need {$cost} gems to process this document.");
+            }
+            auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->decrement('gems', $cost);
+        }
         $parsedText = $this->parsePdf($file);
-
         $config = new GenerationConfig(
             responseMimeType: ResponseMimeType::APPLICATION_JSON,
             responseSchema: new Schema(
@@ -76,6 +83,23 @@ class FlashcardGeneratorService
             return mb_convert_encoding($rawText, 'UTF-8', 'UTF-8');
         } catch (Exception $err) {
             abort(500, "Error parsing the PDF file. Please try again later.");
+        }
+    }
+
+    /**
+     * Counts the number of pages in a given PDF file.
+     *
+     * @param UploadedFile $file
+     * @return int
+     */
+    private function countPages(UploadedFile $file): int
+    {
+        try {
+            $parser = new Parser();
+            $pdf = $parser->parseFile($file->getPathname());
+            return count($pdf->getPages());
+        } catch (Exception $err) {
+            abort(500, "Error counting the pages of the PDF file. Please try again later.");
         }
     }
 }

@@ -8,6 +8,7 @@ import { LayoutProps } from '@/types';
 import Navbar from '@/components/navbar';
 import classes from '@/components/navbar/index.module.css';
 import BottomNavbar from '@/components/bottom-navbar';
+import { TopBar } from "@/components/tob-bar";
 
 function AuthLayout({ child }: LayoutProps) {
     const isMobile = false;
@@ -18,6 +19,7 @@ function AuthLayout({ child }: LayoutProps) {
             <Navbar />
             <BottomNavbar />
 
+            <TopBar/>
             <Box
                 component="main"
                 className={classes.mainContent}

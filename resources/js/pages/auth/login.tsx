@@ -99,11 +99,12 @@ export default function AuthenticationForm({ canResetPassword, status, ...cardPr
 
                     <Group justify="space-between" mt="xl">
                         <Flex direction="column">
-                            {canResetPassword && (
+                            {/* TODO: IDK WHAT WRONG???? */}
+                            {/* {canResetPassword && (
                                 <Link size="xs" c="dimmed" href={request()}>
                                     Forgot password?
                                 </Link>
-                            )}
+                            )} */}
                             <Link
                                 href={register()}
                                 type="button"

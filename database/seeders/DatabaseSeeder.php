@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Deck;
 use App\Models\Flashcard;
 use App\Models\User;
+use App\Models\UserInfo;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -26,6 +27,12 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
+
+
+        UserInfo::firstOrCreate(
+            ['user_id' => 1,"subscription" => "free"],
+        );
+
         /**
          * 1. Bahasa Indonesia: Pungtuasi dan Penulisan
          */

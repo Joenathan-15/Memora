@@ -1,6 +1,6 @@
 import CardStats from '@/components/card-stats';
 import AuthLayout from '@/layouts/auth-layout';
-import { Link,Head } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
     Button,
     Card,
@@ -32,6 +32,8 @@ interface Props {
 
 export default function Dashboard({ decks }: Props) {
     const isMobile = useMediaQuery('(max-width: 800px)');
+    const { props } = usePage();
+    const user = props.auth.user;
 
     return (
         <>
@@ -55,7 +57,6 @@ export default function Dashboard({ decks }: Props) {
                             />
                         ))}
                     </SimpleGrid>
-
                     {/* Quick Upload Section */}
                     <Stack
                         gap={'md'}
@@ -65,6 +66,7 @@ export default function Dashboard({ decks }: Props) {
                             alignSelf: 'flex-start',
                         }}
                     >
+                        <Text size="xl" className='items-center'>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex
