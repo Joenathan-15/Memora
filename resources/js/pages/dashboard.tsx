@@ -6,6 +6,7 @@ import {
     Card,
     Container,
     Flex,
+    Grid,
     Group,
     SimpleGrid,
     Stack,
@@ -40,24 +41,25 @@ export default function Dashboard({ decks }: Props) {
             <Head title="Dashboard" />
 
             <Container fluid>
-                <Flex
-                    direction={{ base: 'column', md: 'row' }}
-                    gap="xl"
-                    justify={{ sm: 'center' }}
+                <Grid
                     align="flex-start"
                 >
-                    <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
-                        {decks.map((deck, i) => (
-                            <CardStats
-                                key={i}
-                                title={deck.title}
-                                href={deck.uuid}
-                                cards={deck.flashcards_count}
-                                created_at={deck.created_at}
-                            />
-                        ))}
-                    </SimpleGrid>
+                    <Grid.Col span={9}>
+                        <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
+                            {decks.map((deck, i) => (
+                                <CardStats
+                                    key={i}
+                                    title={deck.title}
+                                    href={deck.uuid}
+                                    cards={deck.flashcards_count}
+                                    created_at={deck.created_at}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </Grid.Col>
+
                     {/* Quick Upload Section */}
+                    <Grid.Col span={3}>
                     <Stack
                         gap={'md'}
                         style={{
@@ -151,7 +153,8 @@ export default function Dashboard({ decks }: Props) {
                             </Stack>
                         </Card>
                     </Stack>
-                </Flex>
+                    </Grid.Col>
+                </Grid>
             </Container>
         </>
     );
