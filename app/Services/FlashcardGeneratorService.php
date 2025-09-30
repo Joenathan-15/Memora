@@ -24,7 +24,7 @@ class FlashcardGeneratorService
         $user = auth()->user()->load('userinfo');
         if ($user->userinfo()->first()->subscription == "free") {
             $pages = $this->countPages($file);
-            $cost = $pages * 100;
+            $cost = $pages * 50;
             if ($user->userinfo()->first()->gems < $cost) {
                 abort(402, "Insufficient gems. You need {$cost} gems to process this document.");
             }
