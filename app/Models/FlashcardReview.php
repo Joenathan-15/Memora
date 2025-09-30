@@ -58,7 +58,6 @@ class FlashcardReview extends Model
         if ($quality >= 3) {
             $this->correct_count++;
 
-            // Calculate new interval based on SM-2 algorithm
             if ($this->repetition == 0) {
                 $this->interval = 1;
             } elseif ($this->repetition == 1) {
@@ -69,15 +68,12 @@ class FlashcardReview extends Model
 
             $this->repetition++;
         } else {
-            // Reset on incorrect answer
             $this->repetition = 0;
             $this->interval = 1;
         }
 
-        // Update ease factor
-        $this->ease_factor = max(1.3, $this->ease_factor + 0.1 - (5 - $quality) * (0.08 + (5 - $quality) * 0.02));
+        $this->ease_factor = max(1.3, $this->ease_factor - 0.8 + 0.28 * $quality - 0.02 * $quality * $quality);
 
-        // Set next review date
         $this->next_review_date = Carbon::today()->addDays($this->interval);
         $this->last_reviewed_at = now();
         $this->quality = $quality;

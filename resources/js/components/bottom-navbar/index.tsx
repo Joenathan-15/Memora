@@ -23,7 +23,7 @@ export function BottomNavbar() {
 
     return (
         <nav className={classes.navbar}>
-            <Flex justify="space-between">
+            <Flex justify="space-between" gap="md" h="2rem">
                 {mainLinks.map((link) => {
                     const isActive = url.startsWith(link.url);
 
