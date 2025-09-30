@@ -44,7 +44,7 @@ export default function Dashboard({ decks }: Props) {
                 <Grid
                     align="flex-start"
                 >
-                    <Grid.Col span={9}>
+                    <Grid.Col span={{base: 12, md: 9}}>
                         <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
                             {decks.map((deck, i) => (
                                 <CardStats
@@ -59,7 +59,7 @@ export default function Dashboard({ decks }: Props) {
                     </Grid.Col>
 
                     {/* Quick Upload Section */}
-                    <Grid.Col span={3}>
+                    <Grid.Col span={{base: 12, md: 3}}>
                     <Stack
                         gap={'md'}
                         style={{
@@ -68,7 +68,7 @@ export default function Dashboard({ decks }: Props) {
                             alignSelf: 'flex-start',
                         }}
                     >
-                        <Text size="xl" className='items-center'>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
+                        <Text size="xl" className='items-center' style={{ display: isMobile ? "none" : "block" }}>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex
