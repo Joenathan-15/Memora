@@ -1,9 +1,8 @@
+import CardExplore from '@/components/card-explore';
 import GuestLayout from '@/layouts/guest-layout';
 import { Head } from '@inertiajs/react';
-import CardExplore from '@/components/card-explore';
 import {
     ActionIcon,
-    Text,
     Card,
     Checkbox,
     Container,
@@ -13,19 +12,28 @@ import {
     Select,
     SimpleGrid,
     Stack,
+    Text,
     TextInput,
 } from '@mantine/core';
-import {
-    IconSearch,
-} from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
 
-export default function Welcome() {
+interface Deck {
+    uuid: string;
+    title: string;
+    created_at: string;
+}
+
+interface Props {
+    decks: Deck[];
+}
+
+export default function Welcome({ decks }: Props) {
     return (
         <>
             <Head title="Explore" />
-            <Container fluid p="md" h={"94vh"} pt={15}>
+            <Container fluid p="md" h={'94vh'} pt={15}>
                 <Grid>
-                    <Grid.Col span={{base: 12, md: 3}}>
+                    <Grid.Col span={{ base: 12, md: 3 }}>
                         <Stack gap="md">
                             <Card withBorder>
                                 <Group grow={false} w="100%">
@@ -39,7 +47,13 @@ export default function Welcome() {
                                         variant="default"
                                         aria-label="ActionIcon the same size as inputs"
                                     >
-                                        <IconSearch style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                                        <IconSearch
+                                            style={{
+                                                width: '70%',
+                                                height: '70%',
+                                            }}
+                                            stroke={1.5}
+                                        />
                                     </ActionIcon>
                                 </Group>
                             </Card>
@@ -48,7 +62,12 @@ export default function Welcome() {
                                 <Select
                                     placeholder="Pick an order"
                                     defaultValue="Relevance"
-                                    data={['Relevance', 'Most Download', 'Least Download', 'Newest']}
+                                    data={[
+                                        'Relevance',
+                                        'Most Download',
+                                        'Least Download',
+                                        'Newest',
+                                    ]}
                                 />
                             </Card>
                             <Card withBorder>
@@ -66,37 +85,37 @@ export default function Welcome() {
                                         <Checkbox label="Business & Finance" />
                                         <Checkbox label="Law & Political Science" />
                                         <Checkbox label="Medicine & Nursing" />
-
                                     </Stack>
                                 </ScrollArea>
                             </Card>
                         </Stack>
                     </Grid.Col>
 
-                    <Grid.Col span={{base: 12, md: 9}}>
+                    <Grid.Col span={{ base: 12, md: 9 }}>
                         <Container fluid px={0}>
                             <ScrollArea h={'91vh'}>
-                                <SimpleGrid cols={{ base: 1, lg: 3 }} spacing="md">
-                                    {[...Array(30)].map((deck, i) => {
-                                        const badges: Array<'featured' | 'trending' | undefined> = [
-                                            'featured',
-                                            'trending',
-                                            undefined,
-                                            undefined,
-                                            undefined,
-                                        ];
-                                        const badge = badges[Math.floor(Math.random() * badges.length)];
-
-                                        return <CardExplore key={i} title={"deck.title"} badge={badge} />;
-                                        })}
+                                <SimpleGrid
+                                    cols={{ base: 1, lg: 3 }}
+                                    spacing="md"
+                                >
+                                    {decks.length > 0 ? (
+                                        decks.map((deck) => (
+                                            <CardExplore
+                                                key={deck.uuid}
+                                                title={deck.title}
+                                                created_at={deck.created_at}
+                                                badge={undefined}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Text>No decks found.</Text>
+                                    )}
                                 </SimpleGrid>
                             </ScrollArea>
                         </Container>
                     </Grid.Col>
                 </Grid>
             </Container>
-
-
         </>
     );
 }

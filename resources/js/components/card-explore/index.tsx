@@ -2,17 +2,36 @@ import { Badge, Card, Group, Text } from '@mantine/core';
 import classes from './index.module.css';
 
 const stats = [
-    { title: 'Created', value: '2 months ago' },
-    { title: 'Downloads', value: '193' },
-    { title: 'Confident', value: '12' },
+    { title: 'Created', value: '-' },
+    { title: 'Downloads', value: '-' },
+    { title: 'Confident', value: '-' },
 ];
+
+function formatRelativeTime(dateString: string): string {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 1) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays < 14) return 'Last week';
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
+
+    return `${Math.floor(diffDays / 365)} years ago`;
+}
 
 interface Props {
     title: string;
+    created_at: string;
     badge: string | undefined;
 }
 
-export default function CardExplore({ title, badge }: Props) {
+export default function CardExplore({ title, created_at, badge }: Props) {
+    const formattedDate = formatRelativeTime(created_at);
+    stats[0].value = formattedDate;
     const items = stats.map((stat) => (
         <div key={stat.title}>
             <Text size="xs" c="dimmed">

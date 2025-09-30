@@ -11,7 +11,12 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('welcome');
 
-Route::get('/explore', fn() => Inertia::render('explore'))->name('explore');
+Route::get('/explore', function () {
+    $decks = Deck::select(['uuid', 'title', 'created_at'])->where("is_public", true)->get();
+    return Inertia::render('explore', [
+        'decks' => $decks
+    ]);
+})->name('explore');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
