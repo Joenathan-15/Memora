@@ -102,15 +102,6 @@ export default function Dashboard({ decks }: Props) {
                                             Upload PDF
                                         </Link>
                                     </Button>
-                                    <Button
-                                        leftSection={
-                                            <IconPresentation size={16} />
-                                        }
-                                        variant="default"
-                                        size={isMobile ? 'sm' : 'md'}
-                                    >
-                                        Upload PowerPoint
-                                    </Button>
                                 </Group>
                             </Stack>
                         </Card>
