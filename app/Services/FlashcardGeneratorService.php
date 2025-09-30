@@ -21,13 +21,14 @@ class FlashcardGeneratorService
      */
     public function generateFlashcardsFromPdf(UploadedFile $file): array
     {
-        if (auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->subscription == "free") {
+        $user = auth()->user()->load('userinfo');
+        if ($user->userinfo()->first()->subscription == "free") {
             $pages = $this->countPages($file);
-            $cost = $pages * 100; // Example cost calculation: 100 gems per page
-            if (auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->gems < $cost) {
+            $cost = $pages * 100;
+            if ($user->userinfo()->first()->gems < $cost) {
                 abort(402, "Insufficient gems. You need {$cost} gems to process this document.");
             }
-            auth()->user()->with(["UserInfo"])->first()->userinfo()->first()->decrement('gems', $cost);
+            $user->userinfo()->first()->decrement('gems', $cost);
         }
         $parsedText = $this->parsePdf($file);
         $config = new GenerationConfig(
