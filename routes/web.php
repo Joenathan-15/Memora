@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\DeckController;
+use App\Http\Controllers\FlashcardController;
 use App\Models\Deck;
+use App\Models\Flashcard;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -37,6 +39,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Review decks
         Route::post('/{deck}/flashcards/{flashcard}/review', [DeckController::class, 'reviewCard']);
+    });
+
+
+    Route::prefix("/flashcards")->group(function () {
+        // Create flashcards
+        Route::post('/', [FlashcardController::class, 'store'])->name('flashcards.store');
+
+        // Edit flashcards
+        Route::put('/{id}', [FlashcardController::class, 'update'])->name('flashcards.update');
+
+        // Delete flashcards
+        Route::delete('/{id}', [FlashcardController::class, 'destroy'])->name('flashcards.destroy');
     });
 });
 

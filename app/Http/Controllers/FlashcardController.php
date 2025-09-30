@@ -28,7 +28,16 @@ class FlashcardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validate the request
+        $validated = $request->validate([
+            'deck_id' => 'required|exists:decks,id',
+            'question' => 'required|string|max:255',
+            'answer' => 'required|string|max:255',
+        ]);
+
+        // create the flashcard
+        Flashcard::create($validated);
+        return redirect()->back()->with('success', 'Flashcard created successfully.');
     }
 
     /**
@@ -50,16 +59,25 @@ class FlashcardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Flashcard $flashcard)
+    public function update(Request $request, int $id)
     {
-        //
+        $validated = $request->validate([
+            'question' => 'required|string|max:255',
+            'answer' => 'required|string|max:255',
+        ]);
+
+        $flashcard = Flashcard::findOrFail($id);
+        $flashcard->update($validated);
+        return redirect()->back()->with('success', 'Flashcard updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Flashcard $flashcard)
+    public function destroy(int $id)
     {
-        //
+        $flashcard = Flashcard::findOrFail($id);
+        $flashcard->delete();
+        return redirect()->back()->with('success', 'Flashcard deleted successfully.');
     }
 }

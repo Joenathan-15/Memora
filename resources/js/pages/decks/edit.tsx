@@ -1,10 +1,11 @@
 import AuthLayout from '@/layouts/auth-layout';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import {
     Badge,
     Button,
     Card,
     Group,
+    Modal,
     ScrollArea,
     Stack,
     Switch,
@@ -12,7 +13,7 @@ import {
     TextInput,
     Textarea,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import React, { ReactNode, useState } from 'react';
 
 type PageWithLayout = React.FC & {
@@ -43,13 +44,29 @@ interface DeckForm {
 const EditDeck: PageWithLayout = () => {
     const { deck } = usePage().props as unknown as { deck: Deck };
     const flashcards = deck?.flashcards ?? [];
-      const isMd = useMediaQuery("(min-width: 768px)"); // md breakpoint
+    const isMd = useMediaQuery('(min-width: 768px)'); // md breakpoint
+    const [newCardModalOpened, { open: openNewCard, close: closeNewCard }] =
+        useDisclosure(false);
+    const [editCardModalOpened, { open: openEditCard, close: closeEditCard }] =
+        useDisclosure(false);
 
     // always-visible edit form
-    const form = useForm<DeckForm>({
+    const formDeck = useForm<DeckForm>({
         title: deck?.title ?? '',
         description: deck?.description ?? '',
         is_public: !!deck?.is_public,
+    });
+
+    const formCard = useForm<DeckForm>({
+        deck_id: deck.id,
+        question: '',
+        answer: '',
+    });
+
+    const formEditCard = useForm<DeckForm>({
+        flashCard_id: 0,
+        question: '',
+        answer: '',
     });
 
     const INITIAL_SHOW = 10;
@@ -59,196 +76,417 @@ const EditDeck: PageWithLayout = () => {
 
     const handleDelete = (id: number) => {
         if (!confirm('Delete this flashcard?')) return;
-        // use Inertia global to perform delete — server should redirect back with updated props
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).Inertia.delete(`/flashcards/${id}`);
+        formCard.delete(`/flashcards/${id}`);
     };
 
-    const handleSubmit = (e?: React.FormEvent) => {
+    const handleDeckSubmit = (e?: React.FormEvent) => {
         e?.preventDefault();
-        form.put(`/decks/${deck.id}`);
+        formDeck.put(`/decks/${deck.id}`);
     };
 
-    const handleCancel = () => {
-        form.setData('title', deck.title ?? '');
-        form.setData('description', deck.description ?? '');
-        form.setData('is_public', !!deck.is_public);
-        form.clearErrors();
+    const handleDeckCancel = () => {
+        formDeck.setData('title', deck.title ?? '');
+        formDeck.setData('description', deck.description ?? '');
+        formDeck.setData('is_public', !!deck.is_public);
+        formDeck.clearErrors();
+    };
+
+    const handleCardSubmit = (e?: React.FormEvent) => {
+        e?.preventDefault();
+        formCard.post(`/flashcards`);
+        formCard.reset();
+    };
+
+    const handleCardUpdate = (e?: React.FormEvent) => {
+        e?.preventDefault();
+        formEditCard.put(`/flashcards/${formEditCard.data.flashCard_id}`);
+        formEditCard.reset();
+        closeEditCard();
     };
 
     return (
-        <Stack gap="md">
-            <Card withBorder>
-                <Group
-                    justify="space-between"
-                    align="flex-start"
-                    style={{ gap: 16 }}
-                >
-                    <Stack gap={6} style={{ flex: 1 }}>
-                        <form onSubmit={handleSubmit}>
-                            <Stack gap="sm">
-                                <TextInput
-                                    label="Title"
-                                    placeholder="Deck title"
-                                    required
-                                    value={form.data.title}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'title',
-                                            e.currentTarget.value,
-                                        )
-                                    }
-                                    error={
-                                        (form.errors.title as string) ??
-                                        undefined
-                                    }
-                                />
-
-                                <Textarea
-                                    label="Description"
-                                    placeholder="Short description of this deck"
-                                    minRows={3}
-                                    value={form.data.description}
-                                    onChange={(e) =>
-                                        form.setData(
-                                            'description',
-                                            e.currentTarget.value,
-                                        )
-                                    }
-                                    error={
-                                        (form.errors.description as string) ??
-                                        undefined
-                                    }
-                                />
-
-                                <Group justify="space-between" align="center">
-                                    <Switch
-                                        checked={!!form.data.is_public}
-                                        onChange={(event) =>
-                                            form.setData(
-                                                'is_public',
-                                                !!event.currentTarget.checked,
+        <>
+            <Modal
+                opened={editCardModalOpened}
+                onClose={closeEditCard}
+                title="Edit Flashcard"
+                centered
+            >
+                <form>
+                    <Stack gap="sm">
+                        <TextInput
+                            label="Question"
+                            placeholder="Flashcard question"
+                            required
+                            value={formEditCard.data.question}
+                            onChange={(e) =>
+                                formEditCard.setData(
+                                    'question',
+                                    e.currentTarget.value,
+                                )
+                            }
+                            error={
+                                (formEditCard.errors.question as string) ??
+                                undefined
+                            }
+                        />
+                        <Textarea
+                            label="Answer"
+                            placeholder="Flashcard answer"
+                            required
+                            minRows={3}
+                            value={formEditCard.data.answer}
+                            onChange={(e) =>
+                                formEditCard.setData(
+                                    'answer',
+                                    e.currentTarget.value,
+                                )
+                            }
+                            error={
+                                (formEditCard.errors.answer as string) ??
+                                undefined
+                            }
+                        />
+                        <Group justify="end">
+                            <Button
+                                loading={formEditCard.processing}
+                                variant="default"
+                                onClick={closeEditCard}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                loading={formEditCard.processing}
+                                onClick={handleCardUpdate}
+                            >
+                                Save
+                            </Button>
+                        </Group>
+                    </Stack>
+                </form>
+            </Modal>
+            {/* Modal End */}
+            <Modal
+                opened={newCardModalOpened}
+                onClose={closeNewCard}
+                title="New Flashcard"
+                centered
+            >
+                <form>
+                    <Stack gap="sm">
+                        <TextInput
+                            label="Question"
+                            placeholder="Flashcard question"
+                            required
+                            value={formCard.data.question}
+                            onChange={(e) =>
+                                formCard.setData(
+                                    'question',
+                                    e.currentTarget.value,
+                                )
+                            }
+                            error={
+                                (formCard.errors.question as string) ??
+                                undefined
+                            }
+                        />
+                        <Textarea
+                            label="Answer"
+                            placeholder="Flashcard answer"
+                            required
+                            minRows={3}
+                            value={formCard.data.answer}
+                            onChange={(e) =>
+                                formCard.setData(
+                                    'answer',
+                                    e.currentTarget.value,
+                                )
+                            }
+                            error={
+                                (formCard.errors.answer as string) ?? undefined
+                            }
+                        />
+                        <Group justify="end">
+                            <Button
+                                loading={formCard.processing}
+                                variant="default"
+                                onClick={close}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                loading={formCard.processing}
+                                onClick={handleCardSubmit}
+                            >
+                                Save
+                            </Button>
+                        </Group>
+                    </Stack>
+                </form>
+            </Modal>
+            <Stack gap="md">
+                <Card withBorder>
+                    <Group
+                        justify="space-between"
+                        align="flex-start"
+                        style={{ gap: 16 }}
+                    >
+                        <Stack gap={6} style={{ flex: 1 }}>
+                            <form onSubmit={handleDeckSubmit}>
+                                <Stack gap="sm">
+                                    <TextInput
+                                        label="Title"
+                                        placeholder="Deck title"
+                                        required
+                                        value={formDeck.data.title}
+                                        onChange={(e) =>
+                                            formDeck.setData(
+                                                'title',
+                                                e.currentTarget.value,
                                             )
                                         }
-                                        label={
-                                            form.data.is_public
-                                                ? 'Public'
-                                                : 'Private'
+                                        error={
+                                            (formDeck.errors.title as string) ??
+                                            undefined
                                         }
                                     />
 
-                                    <Group>
-                                        <Button
-                                            type="button"
-                                            variant="default"
-                                            onClick={handleCancel}
-                                        >
-                                            Reset
-                                        </Button>
-                                        <Button
-                                            type="submit"
-                                            loading={form.processing}
-                                        >
-                                            Save
-                                        </Button>
+                                    <Textarea
+                                        label="Description"
+                                        placeholder="Short description of this deck"
+                                        minRows={3}
+                                        value={formDeck.data.description}
+                                        onChange={(e) =>
+                                            formDeck.setData(
+                                                'description',
+                                                e.currentTarget.value,
+                                            )
+                                        }
+                                        error={
+                                            (formDeck.errors
+                                                .description as string) ??
+                                            undefined
+                                        }
+                                    />
+
+                                    <Group
+                                        justify="space-between"
+                                        align="center"
+                                    >
+                                        <Switch
+                                            checked={!!formDeck.data.is_public}
+                                            onChange={(event) =>
+                                                formDeck.setData(
+                                                    'is_public',
+                                                    !!event.currentTarget
+                                                        .checked,
+                                                )
+                                            }
+                                            label={
+                                                formDeck.data.is_public
+                                                    ? 'Public'
+                                                    : 'Private'
+                                            }
+                                        />
+
+                                        <Group>
+                                            <Button
+                                                type="button"
+                                                variant="default"
+                                                onClick={handleDeckCancel}
+                                            >
+                                                Reset
+                                            </Button>
+                                            <Button
+                                                type="submit"
+                                                loading={formDeck.processing}
+                                            >
+                                                Save
+                                            </Button>
+                                        </Group>
                                     </Group>
-                                </Group>
-                            </Stack>
-                        </form>
-                    </Stack>
-
-                    <Stack gap="sm">
-                        <Badge color={deck?.is_public ? 'green' : 'gray'}>
-                            {deck?.is_public ? 'Public' : 'Private'}
-                        </Badge>
-                    </Stack>
-                </Group>
-            </Card>
-
-            <Card withBorder>
-                <Stack gap="sm">
-                    <Group justify="space-between">
-                        <Text w={600}>Flashcards</Text>
-                        <Link
-                            href={`/decks/${deck?.id}/flashcards/create`}
-                            as="a"
-                        >
-                            <Button size="sm">Add</Button>
-                        </Link>
-                    </Group>
-
-                    <ScrollArea>
-                        <Stack gap="md">
-                            {flashcards.length === 0 ?
-                            (
-                                <Text c="dimmed">No flashcards yet.</Text>
-                            ) : (
-                                flashcards.slice(0, visibleCount).map((f, i) => (
-                                        <Card withBorder key={f.id}>
-                                            {isMd ? (
-                                                <Group justify="space-between" align="center" style={{ gap: 16 }}>
-                                                    <Stack gap={6} style={{ flex: 1 }}>
-                                                        <Text style={{fontSize: 16}}>
-                                                            {f.question}
-                                                        </Text>
-                                                        <Text c="dimmed" style={{whiteSpace:'pre-wrap'}}>
-                                                            {f.answer}
-                                                        </Text>
-                                                    </Stack>
-                                                    <Stack gap="xs">
-                                                        <Button size="xs">
-                                                            <Link href={`/flashcards/${f.id}/edit`} as="a">
-                                                                Edit
-                                                            </Link>
-                                                        </Button>
-                                                        <Button size="xs" variant="outline" color="red" onClick={() =>handleDelete(f.id)}>
-                                                            Delete
-                                                        </Button>
-                                                    </Stack>
-                                                </Group>
-                                            ) : (
-                                                <Stack align="center" style={{ gap: 16 }}>
-                                                    <Stack gap={6} style={{ flex: 1 }}>
-                                                        <Text style={{fontSize: 16}}>
-                                                            {f.question}
-                                                        </Text>
-                                                        <Text c="dimmed" style={{whiteSpace:'pre-wrap'}}>
-                                                            {f.answer}
-                                                        </Text>
-                                                    </Stack>
-                                                    <Stack w={'100%'} gap="xs">
-                                                        <Button size="xs" w={'100%'}>
-                                                            <Link href={`/flashcards/${f.id}/edit`} as="a">
-                                                                    Edit
-                                                            </Link>
-                                                        </Button>
-                                                        <Button size="xs" variant="outline" color="red" onClick={() =>handleDelete(f.id)}>
-                                                                Delete
-                                                        </Button>
-                                                    </Stack>
-                                                </Stack>
-                                            )}
-                                        </Card>
-                                ))
-                            )}
+                                </Stack>
+                            </form>
                         </Stack>
-                    </ScrollArea>
 
-                    {flashcards.length > visibleCount && (
-                        <Group justify="center">
-                            <Button
-                                variant="outline"
-                                onClick={() =>
-                                    setVisibleCount(flashcards.length)
-                                }
-                            >
-                                Show all ({flashcards.length})
+                        <Stack gap="sm">
+                            <Badge color={deck?.is_public ? 'green' : 'gray'}>
+                                {deck?.is_public ? 'Public' : 'Private'}
+                            </Badge>
+                        </Stack>
+                    </Group>
+                </Card>
+
+                <Card withBorder>
+                    <Stack gap="sm">
+                        <Group justify="space-between">
+                            <Text w={600}>Flashcards</Text>
+                            <Button onClick={openNewCard} size="sm">
+                                Add
                             </Button>
                         </Group>
-                    )}
-                </Stack>
-            </Card>
-        </Stack>
+
+                        <ScrollArea>
+                            <Stack gap="md">
+                                {flashcards.length === 0 ? (
+                                    <Text c="dimmed">No flashcards yet.</Text>
+                                ) : (
+                                    flashcards
+                                        .slice(0, visibleCount)
+                                        .map((f, i) => (
+                                            <Card withBorder key={f.id}>
+                                                {isMd ? (
+                                                    <Group
+                                                        justify="space-between"
+                                                        align="center"
+                                                        style={{ gap: 16 }}
+                                                    >
+                                                        <Stack
+                                                            gap={6}
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 16,
+                                                                }}
+                                                            >
+                                                                {f.question}
+                                                            </Text>
+                                                            <Text
+                                                                c="dimmed"
+                                                                style={{
+                                                                    whiteSpace:
+                                                                        'pre-wrap',
+                                                                }}
+                                                            >
+                                                                {f.answer}
+                                                            </Text>
+                                                        </Stack>
+                                                        <Stack gap="xs">
+                                                            <Button
+                                                                size="xs"
+                                                                onClick={() => {
+                                                                    formEditCard.setData(
+                                                                        'flashCard_id',
+                                                                        f.id,
+                                                                    );
+                                                                    formEditCard.setData(
+                                                                        'question',
+                                                                        f.question,
+                                                                    );
+                                                                    formEditCard.setData(
+                                                                        'answer',
+                                                                        f.answer,
+                                                                    );
+                                                                    openEditCard();
+                                                                }}
+                                                            >
+                                                                Edit
+                                                            </Button>
+                                                            <Button
+                                                                size="xs"
+                                                                variant="outline"
+                                                                color="red"
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        f.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </Button>
+                                                        </Stack>
+                                                    </Group>
+                                                ) : (
+                                                    <Stack
+                                                        align="center"
+                                                        style={{ gap: 16 }}
+                                                    >
+                                                        <Stack
+                                                            gap={6}
+                                                            style={{ flex: 1 }}
+                                                        >
+                                                            <Text
+                                                                style={{
+                                                                    fontSize: 16,
+                                                                }}
+                                                            >
+                                                                {f.question}
+                                                            </Text>
+                                                            <Text
+                                                                c="dimmed"
+                                                                style={{
+                                                                    whiteSpace:
+                                                                        'pre-wrap',
+                                                                }}
+                                                            >
+                                                                {f.answer}
+                                                            </Text>
+                                                        </Stack>
+                                                        <Stack
+                                                            w={'100%'}
+                                                            gap="xs"
+                                                        >
+                                                            <Button
+                                                                size="xs"
+                                                                w={'100%'}
+                                                                onClick={() => {
+                                                                    formEditCard.setData(
+                                                                        'flashCard_id',
+                                                                        f.id,
+                                                                    );
+                                                                    formEditCard.setData(
+                                                                        'question',
+                                                                        f.question,
+                                                                    );
+                                                                    formEditCard.setData(
+                                                                        'answer',
+                                                                        f.answer,
+                                                                    );
+                                                                    openEditCard();
+                                                                }}
+                                                            >
+                                                                Edit
+                                                            </Button>
+                                                            <Button
+                                                                size="xs"
+                                                                variant="outline"
+                                                                color="red"
+                                                                onClick={() =>
+                                                                    handleDelete(
+                                                                        f.id,
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </Button>
+                                                        </Stack>
+                                                    </Stack>
+                                                )}
+                                            </Card>
+                                        ))
+                                )}
+                            </Stack>
+                        </ScrollArea>
+
+                        {flashcards.length > visibleCount && (
+                            <Group justify="center">
+                                <Button
+                                    variant="outline"
+                                    onClick={() =>
+                                        setVisibleCount(flashcards.length)
+                                    }
+                                >
+                                    Show all ({flashcards.length})
+                                </Button>
+                            </Group>
+                        )}
+                    </Stack>
+                </Card>
+            </Stack>
+        </>
     );
 };
 
