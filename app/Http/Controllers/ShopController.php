@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\PaymentService as ServicesPaymentService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,7 +15,7 @@ class ShopController extends Controller
             "products" => Product::where('isListed', true)->get()
         ]);
     }
-    public function purchase(Request $request)
+    public function purchase(Request $request, ServicesPaymentService $paymentService)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -33,10 +34,12 @@ class ShopController extends Controller
             return redirect()->back()->withErrors(['User info not found.']);
         }
 
-        // Add product quantity to user's gems
-        $userinfo->gems += $product->quantity;
-        $userinfo->save();
+        $snapUrl = $paymentService->createPayment($product);
 
-        return redirect()->back()->with('success', 'Product purchased successfully!');
+        // $userinfo->gems += $product->quantity;
+        // $userinfo->save();
+
+        return Inertia::location($snapUrl);
+        // return redirect()->back()->with('success', 'Product purchased successfully!');
     }
 }

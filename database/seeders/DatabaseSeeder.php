@@ -61,62 +61,62 @@ class DatabaseSeeder extends Seeder
             ]
         );
         Product::firstOrCreate(
-            ['name' => 'Starter Pack (2000)'],
+            ['name' => 'Starter Pack'],
             [
-                'price' => "10000",
-                "quantity" => 2000,
+                'price' => "15000",
+                "quantity" => 2100,
                 "isListed" => true,
-                'description' => 'Pack of 2,000 gems for in-app purchases.',
+                'description' => 'A small pack of 2,100 gems to get you started.',
             ]
         );
 
         Product::firstOrCreate(
-            ['name' => 'Value Pack (5000)'],
+            ['name' => 'Value Pack'],
             [
-                'price' => "25000",
-                "quantity" => 5000,
+                'price' => "29000",
+                "quantity" => 4300,
                 "isListed" => true,
-                'description' => 'Pack of 5,000 gems for in-app purchases.',
+                'description' => 'A great value pack of 4,300 gems.',
             ]
         );
 
         Product::firstOrCreate(
-            ['name' => 'Super Pack (10000)'],
+            ['name' => 'Super Pack'],
             [
-                'price' => "50000",
-                "quantity" => 10000,
+                'price' => "49000",
+                "quantity" => 7900,
                 "isListed" => true,
-                'description' => 'Pack of 10,000 gems for in-app purchases.',
+                'description' => 'A super pack containing 7,900 gems.',
             ]
         );
 
         Product::firstOrCreate(
-            ['name' => 'Mega Pack (20000)'],
+            ['name' => 'Mega Pack'],
             [
-                'price' => "100000",
-                "quantity" => 20000,
+                'price' => "79000",
+                "quantity" => 13500,
                 "isListed" => true,
-                'description' => 'Pack of 20,000 gems for in-app purchases.',
+                'description' => 'A mega-sized deal for 13,500 gems.',
             ]
         );
 
         Product::firstOrCreate(
-            ['name' => 'Giga Pack (50000)'],
+            ['name' => 'Giga Pack'],
             [
-                'price' => "250000",
-                "quantity" => 50000,
+                'price' => "149000",
+                "quantity" => 27500,
                 "isListed" => true,
-                'description' => 'Pack of 50,000 gems for in-app purchases.',
+                'description' => 'A huge bundle of 27,500 gems for dedicated players.',
             ]
         );
 
         Product::firstOrCreate(
-            ['name' => 'Tera Pack (100000)'],
+            ['name' => 'Tera Pack'],
             [
-                'price' => "500000",
+                'price' => "499000",
                 "quantity" => 100000,
                 "isListed" => true,
-                'description' => 'Pack of 100,000 gems for in-app purchases.',
+                'description' => 'The ultimate value with a massive 100,000 gems.',
             ]
         );
 
