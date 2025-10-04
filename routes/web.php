@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\DeckController;
 use App\Http\Controllers\FlashcardController;
+use App\Http\Controllers\ShopController;
 use App\Models\Deck;
-use App\Models\Flashcard;
-use App\Models\FlashcardReview;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -37,7 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'streak' => $streak,
         ]);
     });
-    Route::get('/profile/edit', fn () => Inertia::render('profile/edit'));
+    Route::get('/profile/edit', fn() => Inertia::render('profile/edit'));
 
     Route::get('/create', [DeckController::class, 'create'])->name('create');
     Route::post('/create', [DeckController::class, 'store'])->name('store');
@@ -52,6 +51,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Review decks
         Route::post('/{deck}/flashcards/{flashcard}/review', [DeckController::class, 'reviewCard']);
+    });
+
+    Route::prefix("/shop")->group(function () {
+        // Store decks
+        Route::get('/', [ShopController::class, 'index'])->name('shop.index');
+        Route::post('/', [ShopController::class, 'purchase'])->name('shop.purchase');
     });
 
 

@@ -14,7 +14,7 @@ const mainLinks = [
     { icon: IconHome, label: 'Home', url: '/home', name: 'upload' },
     { icon: IconMap, label: 'Explore', url: '/explore', name: 'decks.index' },
     { icon: IconCirclePlus, label: 'Create Deck', url: '/create', name: 'decks.create' },
-    { icon: IconBuildingStore, label: 'Store', url: '/store', name: 'decks.due' },
+    { icon: IconBuildingStore, label: 'Shop', url: '/shop', name: 'decks.due' },
     { icon: IconUser, label: 'Profile', url: '/profile', name: 'profile' },
 ];
 

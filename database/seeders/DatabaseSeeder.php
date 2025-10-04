@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Deck;
 use App\Models\Flashcard;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\UserInfo;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -51,6 +52,73 @@ class DatabaseSeeder extends Seeder
             ['subscription' => 'free']
         );
 
+        // Create Products
+        Product::firstOrCreate(
+            ['name' => 'Super Plan'],
+            [
+                'price' => 250000,
+                'description' => 'Advanced features for power users.',
+            ]
+        );
+        Product::firstOrCreate(
+            ['name' => 'Starter Pack (2000)'],
+            [
+                'price' => "10000",
+                "quantity" => 2000,
+                "isListed" => true,
+                'description' => 'Pack of 2,000 gems for in-app purchases.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Value Pack (5000)'],
+            [
+                'price' => "25000",
+                "quantity" => 5000,
+                "isListed" => true,
+                'description' => 'Pack of 5,000 gems for in-app purchases.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Super Pack (10000)'],
+            [
+                'price' => "50000",
+                "quantity" => 10000,
+                "isListed" => true,
+                'description' => 'Pack of 10,000 gems for in-app purchases.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Mega Pack (20000)'],
+            [
+                'price' => "100000",
+                "quantity" => 20000,
+                "isListed" => true,
+                'description' => 'Pack of 20,000 gems for in-app purchases.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Giga Pack (50000)'],
+            [
+                'price' => "250000",
+                "quantity" => 50000,
+                "isListed" => true,
+                'description' => 'Pack of 50,000 gems for in-app purchases.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Tera Pack (100000)'],
+            [
+                'price' => "500000",
+                "quantity" => 100000,
+                "isListed" => true,
+                'description' => 'Pack of 100,000 gems for in-app purchases.',
+            ]
+        );
 
         /**
          * 1. Bahasa Indonesia: Pungtuasi dan Penulisan
