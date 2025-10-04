@@ -66,7 +66,7 @@ export default function Dashboard({ decks }: Props) {
                             alignSelf: 'flex-start',
                         }}
                     >
-                        <Text size="xl" className='items-center'>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
+                        <Text hidden={isMobile} size="xl" className='items-center'>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex

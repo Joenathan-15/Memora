@@ -44,7 +44,7 @@ interface DeckForm {
 const EditDeck: PageWithLayout = () => {
     const { deck } = usePage().props as unknown as { deck: Deck };
     const flashcards = deck?.flashcards ?? [];
-    const isMd = useMediaQuery('(min-width: 768px)'); // md breakpoint
+    const isMd = useMediaQuery('(min-width: 768px)');
     const [newCardModalOpened, { open: openNewCard, close: closeNewCard }] =
         useDisclosure(false);
     const [editCardModalOpened, { open: openEditCard, close: closeEditCard }] =

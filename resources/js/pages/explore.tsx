@@ -38,6 +38,10 @@ export default function Welcome({ decks }: Props) {
                             <Card withBorder>
                                 <Group grow={false} w="100%">
                                     <TextInput
+                                        onChange={() => {
+                                            // Handle search input change
+
+                                        }}
                                         placeholder="Search a deck..."
                                         size="sm"
                                         style={{ flex: 1 }}
