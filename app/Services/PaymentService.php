@@ -54,7 +54,6 @@ class PaymentService
             $transaction = Snap::createTransaction($params);
             return $transaction->redirect_url;
         } catch (Exception $e) {
-            dd($e->getMessage());
             report($e); // optional: logs the error
             abort(500, 'Payment gateway error: ' . $e->getMessage());
         }

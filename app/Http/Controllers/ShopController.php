@@ -35,11 +35,6 @@ class ShopController extends Controller
         }
 
         $snapUrl = $paymentService->createPayment($product);
-
-        // $userinfo->gems += $product->quantity;
-        // $userinfo->save();
-
         return Inertia::location($snapUrl);
-        // return redirect()->back()->with('success', 'Product purchased successfully!');
     }
 }
