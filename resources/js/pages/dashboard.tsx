@@ -6,6 +6,7 @@ import {
     Card,
     Container,
     Flex,
+    Grid,
     Group,
     SimpleGrid,
     Stack,
@@ -40,24 +41,25 @@ export default function Dashboard({ decks }: Props) {
             <Head title="Dashboard" />
 
             <Container fluid>
-                <Flex
-                    direction={{ base: 'column', md: 'row' }}
-                    gap="xl"
-                    justify={{ sm: 'center' }}
+                <Grid
                     align="flex-start"
                 >
-                    <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
-                        {decks.map((deck, i) => (
-                            <CardStats
-                                key={i}
-                                title={deck.title}
-                                href={deck.uuid}
-                                cards={deck.flashcards_count}
-                                created_at={deck.created_at}
-                            />
-                        ))}
-                    </SimpleGrid>
+                    <Grid.Col span={{base: 12, md: 9}}>
+                        <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
+                            {decks.map((deck, i) => (
+                                <CardStats
+                                    key={i}
+                                    title={deck.title}
+                                    href={deck.uuid}
+                                    cards={deck.flashcards_count}
+                                    created_at={deck.created_at}
+                                />
+                            ))}
+                        </SimpleGrid>
+                    </Grid.Col>
+
                     {/* Quick Upload Section */}
+                    <Grid.Col span={{base: 12, md: 3}}>
                     <Stack
                         gap={'md'}
                         style={{
@@ -66,7 +68,7 @@ export default function Dashboard({ decks }: Props) {
                             alignSelf: 'flex-start',
                         }}
                     >
-                        <Text hidden={isMobile} size="xl" className='items-center'>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
+                        <Text size="xl" className='items-center' style={{ display: isMobile ? "none" : "block" }}>💎 <span className='font-bold'>{user.user_info.gems}</span></Text>
                         <Card withBorder>
                             <Stack gap="md">
                                 <Flex
@@ -99,15 +101,6 @@ export default function Dashboard({ decks }: Props) {
                                         <Link href={`/create`} as="a">
                                             Upload PDF
                                         </Link>
-                                    </Button>
-                                    <Button
-                                        leftSection={
-                                            <IconPresentation size={16} />
-                                        }
-                                        variant="default"
-                                        size={isMobile ? 'sm' : 'md'}
-                                    >
-                                        Upload PowerPoint
                                     </Button>
                                 </Group>
                             </Stack>
@@ -151,7 +144,8 @@ export default function Dashboard({ decks }: Props) {
                             </Stack>
                         </Card>
                     </Stack>
-                </Flex>
+                    </Grid.Col>
+                </Grid>
             </Container>
         </>
     );

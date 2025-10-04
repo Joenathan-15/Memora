@@ -39,7 +39,7 @@ export default function Profile({streak}: Props) {
             <Grid
                 align="flex-start"
             >
-                <Grid.Col span={9}>
+                <Grid.Col span={{ base: 12, md: 9 }}>
                     <Flex align="center">
                         <Stack gap="sm" flex={1}>
                             <div>
@@ -79,7 +79,7 @@ export default function Profile({streak}: Props) {
                         </Card>
                     </SimpleGrid>
                 </Grid.Col>
-                <Grid.Col span={3}>
+                <Grid.Col span={{ base: 12, md: 3 }}>
                     <Text
                         size="xl"
                         className="items-center"
@@ -89,7 +89,6 @@ export default function Profile({streak}: Props) {
                     >
                         💎 {auth.user.user_info.gems}
                     </Text>
-
 
                     <Card withBorder>
                         <Stack gap="md">
