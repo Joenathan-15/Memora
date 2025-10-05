@@ -13,7 +13,9 @@ class UserInfo extends Model
     protected $fillable = [
         'user_id',
         "gems",
-        "subscription"
+        "subscription_plan",
+        "subscription_start",
+        "subscription_end"
     ];
 
     public function User()

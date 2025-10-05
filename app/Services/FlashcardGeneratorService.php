@@ -22,7 +22,7 @@ class FlashcardGeneratorService
     public function generateFlashcardsFromPdf(UploadedFile $file): array
     {
         $user = auth()->user()->load('userinfo');
-        if ($user->userinfo()->first()->subscription == "free") {
+        if (!$user->hasActiveSubscription()) {
             $pages = $this->countPages($file);
             $cost = $pages * 50;
             if ($user->userinfo()->first()->gems < $cost) {

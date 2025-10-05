@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Deck;
 use App\Models\Flashcard;
+use App\Models\Product;
 use App\Models\User;
 use App\Models\UserInfo;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -42,15 +43,90 @@ class DatabaseSeeder extends Seeder
         // Create UserInfo for Admin
         UserInfo::firstOrCreate(
             ['user_id' => $admin->id],
-            ['subscription' => 'super']
+            ['subscription_plan' => 'super']
         );
 
         // Create UserInfo for Normal User
         UserInfo::firstOrCreate(
             ['user_id' => $user->id],
-            ['subscription' => 'free']
+            ['subscription_plan' => 'free']
         );
 
+        // Create Products
+        Product::firstOrCreate(
+            ['name' => 'Super Plan'],
+            [
+                'price' => 250000,
+                "type" => "subscription",
+                "isListed" => true,
+                'description' => 'Advanced features for power users.',
+            ]
+        );
+        Product::firstOrCreate(
+            ['name' => 'Starter Pack'],
+            [
+                'price' => "15000",
+                "quantity" => 2100,
+                "isListed" => true,
+                "type" => "currency",
+                'description' => 'A small pack of 2,100 gems to get you started.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Value Pack'],
+            [
+                'price' => "29000",
+                "quantity" => 4300,
+                "type" => "currency",
+                "isListed" => true,
+                'description' => 'A great value pack of 4,300 gems.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Super Pack'],
+            [
+                'price' => "49000",
+                "quantity" => 7900,
+                "type" => "currency",
+                "isListed" => true,
+                'description' => 'A super pack containing 7,900 gems.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Mega Pack'],
+            [
+                'price' => "79000",
+                "quantity" => 13500,
+                "type" => "currency",
+                "isListed" => true,
+                'description' => 'A mega-sized deal for 13,500 gems.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Giga Pack'],
+            [
+                'price' => "149000",
+                "quantity" => 27500,
+                "type" => "currency",
+                "isListed" => true,
+                'description' => 'A huge bundle of 27,500 gems for dedicated players.',
+            ]
+        );
+
+        Product::firstOrCreate(
+            ['name' => 'Tera Pack'],
+            [
+                'price' => "499000",
+                "quantity" => 100000,
+                "type" => "currency",
+                "isListed" => true,
+                'description' => 'The ultimate value with a massive 100,000 gems.',
+            ]
+        );
 
         /**
          * 1. Bahasa Indonesia: Pungtuasi dan Penulisan

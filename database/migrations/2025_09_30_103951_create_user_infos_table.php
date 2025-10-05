@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->bigInteger('gems')->default(500);
-            $table->enum('subscription', ['free', 'super'])->default('free');
+            $table->enum('subscription_plan', ['free', 'super'])->default('free');
+            $table->timestamp("subscription_start")->nullable();
+            $table->timestamp("subscription_end")->nullable();
             $table->timestamps();
         });
     }
