@@ -22,7 +22,7 @@ class PaymentService
     /**
      * Create Midtrans payment and return redirect URL
      */
-    public function createPayment(Product $product): string
+    public function createPayment(Product $product): array
     {
         $user = Auth::user();
 
@@ -52,9 +52,8 @@ class PaymentService
 
         try {
             $transaction = Snap::createTransaction($params);
-            return $transaction->redirect_url;
+            return ["orderId" => $orderId, "snapUrl" => $transaction->redirect_url];
         } catch (Exception $e) {
-            report($e); // optional: logs the error
             abort(500, 'Payment gateway error: ' . $e->getMessage());
         }
     }
