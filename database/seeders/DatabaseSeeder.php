@@ -43,13 +43,13 @@ class DatabaseSeeder extends Seeder
         // Create UserInfo for Admin
         UserInfo::firstOrCreate(
             ['user_id' => $admin->id],
-            ['subscription' => 'super']
+            ['subscription_plan' => 'super']
         );
 
         // Create UserInfo for Normal User
         UserInfo::firstOrCreate(
             ['user_id' => $user->id],
-            ['subscription' => 'free']
+            ['subscription_plan' => 'free']
         );
 
         // Create Products
@@ -58,6 +58,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => 250000,
                 "type" => "subscription",
+                "isListed" => true,
                 'description' => 'Advanced features for power users.',
             ]
         );

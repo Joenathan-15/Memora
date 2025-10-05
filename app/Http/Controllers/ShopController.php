@@ -52,7 +52,13 @@ class ShopController extends Controller
         $user = User::find($transaction->user_id);
         $userinfo = $user->UserInfo;
         $transaction = $transaction->load("product");
-        $userinfo->gems += $transaction->product->quantity;
+        if ($transaction->product->type == "currency") {
+            $userinfo->gems += $transaction->product->quantity;
+        } elseif ($transaction->product->type == "subscription") {
+            $userinfo->subscription_plan = "super";
+            $userinfo->subscription_start = now();
+            $userinfo->subscription_end = now()->addDays(30);
+        }
         $userinfo->save();
     }
 

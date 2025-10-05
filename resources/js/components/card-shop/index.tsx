@@ -52,7 +52,6 @@ export default function CardShop({
                     color="blue"
                     fullWidth
                     radius="md"
-                    disabled={quantity <= 0}
                     variant="filled"
                     mt="sm"
                     onClick={() => {

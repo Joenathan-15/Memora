@@ -51,4 +51,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserInfo::class);
     }
+
+    public function hasActiveSubscription(): bool
+    {
+        if (!$this->UserInfo || !$this->UserInfo->subscription_end) {
+            return false;
+        }
+        return $this->UserInfo->subscription_plan == "super" && $this->UserInfo->subscription_end->isFuture();
+    }
 }
