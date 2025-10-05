@@ -61,54 +61,31 @@ class ShopController extends Controller
         try {
             $notification = $request->all();
 
-            // Verify the notification
             $orderId = $notification['order_id'];
             $transactionStatus = $notification['transaction_status'];
             $fraudStatus = $notification['fraud_status'] ?? null;
 
-            // Find the transaction in your database
             $transaction = Transaction::where('id', $orderId)->first();
 
             if (!$transaction) {
                 return response()->json(['status' => 'error', 'message' => 'Transaction not found'], 404);
             }
 
-            // Handle different transaction statuses
-            switch ($transactionStatus) {
-                case 'capture':
-                    if ($fraudStatus == 'accept') {
-                        $transaction->status = 'success';
-                        $this->onPaymentSuccess($transaction);
-                    }
-                    break;
-
-                case 'settlement':
+            if ($transactionStatus == "settlement") {
+                $transaction->status = 'success';
+                $this->onPaymentSuccess($transaction);
+            } elseif ($transactionStatus == "capture") {
+                if ($fraudStatus == 'accept') {
                     $transaction->status = 'success';
                     $this->onPaymentSuccess($transaction);
-                    break;
-
-                case 'pending':
-                    $transaction->status = 'pending';
-                    break;
-
-                case 'deny':
-                    $transaction->status = 'fail';
-                    break;
-
-                case 'expire':
-                    $transaction->status = 'fail';
-                    break;
-
-                case 'cancel':
-                    $transaction->status = 'fail';
-                    break;
-
-                default:
-                    break;
+                }
+            } elseif ($transactionStatus == "pending") {
+                $transaction->status = 'pending';
+            } else {
+                $transaction->status = 'fail';
             }
 
             $transaction->save();
-
             return response()->json(['status' => 'success', 'message' => 'Notification processed']);
         } catch (\Exception $e) {
             return response()->json(['status' => 'error', 'message' => 'Processing failed'], 500);
