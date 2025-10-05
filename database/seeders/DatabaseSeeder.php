@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Super Plan'],
             [
                 'price' => 250000,
+                "type" => "subscription",
                 'description' => 'Advanced features for power users.',
             ]
         );
@@ -66,6 +67,7 @@ class DatabaseSeeder extends Seeder
                 'price' => "15000",
                 "quantity" => 2100,
                 "isListed" => true,
+                "type" => "currency",
                 'description' => 'A small pack of 2,100 gems to get you started.',
             ]
         );
@@ -75,6 +77,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => "29000",
                 "quantity" => 4300,
+                "type" => "currency",
                 "isListed" => true,
                 'description' => 'A great value pack of 4,300 gems.',
             ]
@@ -85,6 +88,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => "49000",
                 "quantity" => 7900,
+                "type" => "currency",
                 "isListed" => true,
                 'description' => 'A super pack containing 7,900 gems.',
             ]
@@ -95,6 +99,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => "79000",
                 "quantity" => 13500,
+                "type" => "currency",
                 "isListed" => true,
                 'description' => 'A mega-sized deal for 13,500 gems.',
             ]
@@ -105,6 +110,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => "149000",
                 "quantity" => 27500,
+                "type" => "currency",
                 "isListed" => true,
                 'description' => 'A huge bundle of 27,500 gems for dedicated players.',
             ]
@@ -115,6 +121,7 @@ class DatabaseSeeder extends Seeder
             [
                 'price' => "499000",
                 "quantity" => 100000,
+                "type" => "currency",
                 "isListed" => true,
                 'description' => 'The ultimate value with a massive 100,000 gems.',
             ]

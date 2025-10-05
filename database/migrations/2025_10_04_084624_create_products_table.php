@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('quantity')->default(0);
             $table->boolean('isListed')->default(false);
+            $table->enum('type',["currency","subscription"]);
             $table->timestamps();
         });
     }
