@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AIHistoryUse;
 use App\Models\Deck;
 use App\Models\Flashcard;
 use App\Services\FlashcardGeneratorService;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Throwable;
 
 class DeckController extends Controller
 {
@@ -48,6 +50,11 @@ class DeckController extends Controller
             ];
 
             if ($request->hasFile('ai_file')) {
+                $todays = AIHistoryUse::where('user_id', auth()->user()->id)->whereDate('created_at', Carbon::today())->get();
+                if (count($todays) > 3 && !auth()->user()->hasActiveSubscription()) {
+                    throw new Exception("You can only upload 3 files per day.");
+                }
+
                 $path = $request->file('ai_file')->store('decks/ai_uploads', 'public');
                 $attributes['ai_file_path'] = $path;
                 $items = $flashcardGenerator->generateFlashcardsFromPdf($request->file("ai_file"));
@@ -65,9 +72,17 @@ class DeckController extends Controller
                     ]);
                 }
             }
+
+            if ($request->hasFile('ai_file')) {
+                AIHistoryUse::create([
+                    'user_id' => $request->user()->id,
+                    'deck_id' => $deck->id,
+                ]);
+            }
+
             return redirect()->route('home')
                 ->with('success', 'Deck created successfully!');
-        } catch (Throwable $e) {
+        } catch (Exception $e) {
             report($e);
             return back()->withErrors(['error' => $e->getMessage()]);
         }
