@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('question');
             $table->string('answer');
+            $table->boolean("is_ai_generated")->default(0);
             $table->foreignId('deck_id')->constrained();
             $table->softDeletes();
             $table->timestamps();

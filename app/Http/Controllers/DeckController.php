@@ -36,10 +36,10 @@ class DeckController extends Controller
     {
         try {
             $validated = $request->validate([
-                'title'       => 'required|string|max:255',
+                'title'       => 'string|max:255|nullable',
                 'description' => 'nullable|string',
                 'is_public'   => 'required|boolean',
-                'ai_file' => 'nullable|file|max:10240|mimes:pdf,ppt,pptx,odp,png,jpg,jpeg',
+                'ai_file' => 'nullable|file|max:10240|mimes:pdf',
             ]);
 
             $attributes = [

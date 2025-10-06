@@ -150,9 +150,6 @@ const CreateDeck: PageWithLayout = () => {
                             maxSize={10 * 1024 ** 2} // 10 MB
                             accept={[
                                 MIME_TYPES.pdf,
-                                MIME_TYPES.ppt,
-                                MIME_TYPES.pptx,
-                                'odp',
                             ]}
                         >
                             <Group
@@ -190,8 +187,7 @@ const CreateDeck: PageWithLayout = () => {
                                         Drag files here or click to select
                                     </Text>
                                     <Text size="sm" c="dimmed" inline mt={7}>
-                                        Attach a PDF or presentation
-                                        (ppt/pptx/odp). Each file should not
+                                        Attach a PDF. Each file should not
                                         exceed 10 MB.
                                     </Text>
                                 </div>
