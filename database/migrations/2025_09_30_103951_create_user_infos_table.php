@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->bigInteger('gems')->default(500);
+            $table->timestamp('last_reward_claimed_at')->nullable();
+            $table->timestamp('reward_program_started_at')->nullable();
+            $table->integer('reward_streak_count')->default(0);
             $table->enum('subscription_plan', ['free', 'super'])->default('free');
             $table->timestamp("subscription_start")->nullable();
             $table->timestamp("subscription_end")->nullable();

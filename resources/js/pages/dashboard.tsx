@@ -16,9 +16,11 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import {
     IconFileText,
-    IconPresentation,
     IconUpload,
 } from '@tabler/icons-react';
+import { useEffect } from 'react';
+import { notifications } from '@mantine/notifications';
+import { DailyRewardNotification } from '@/components/daily-reward-notification';
 
 interface Deck {
     uuid: string;
@@ -36,9 +38,31 @@ export default function Dashboard({ decks }: Props) {
     const { props } = usePage();
     const user = props.auth.user;
 
+    useEffect(() => {
+        if (props.flash?.success) {
+            notifications.show({
+                title: "Reward Claimed! 🎉",
+                message: props.flash.success,
+                color: 'green',
+                autoClose: 3000,
+            });
+        }
+
+        if (props.flash?.error) {
+            notifications.show({
+                title: "Error",
+                message: props.flash.error,
+                color: 'red',
+                autoClose: 3000,
+            });
+        }
+    }, [props.flash]);
+
     return (
         <>
             <Head title="Dashboard" />
+            <DailyRewardNotification rewardInfo={props.rewardInfo} />
+
 
             <Container fluid>
                 <Grid

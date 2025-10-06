@@ -15,7 +15,15 @@ class UserInfo extends Model
         "gems",
         "subscription_plan",
         "subscription_start",
-        "subscription_end"
+        "subscription_end",
+        'last_reward_claimed_at',
+        'reward_program_started_at',
+        'reward_streak_count'
+    ];
+
+    protected $casts = [
+        'last_reward_claimed_at' => 'datetime',
+        'reward_program_started_at' => 'datetime',
     ];
 
     public function User()
