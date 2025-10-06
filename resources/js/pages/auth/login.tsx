@@ -1,31 +1,34 @@
+import GithubButton from '@/components/github-button';
+import GoogleButton from '@/components/google-button';
+import Link from '@/components/link';
+import AuthenticatedSessionController from '@/wayfinder/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
+import { register } from '@/wayfinder/routes';
+import { useForm } from '@inertiajs/react';
 import {
     Button,
+    Card,
+    CardProps,
+    Center,
     Checkbox,
     Divider,
+    Flex,
     Group,
-    CardProps,
     PasswordInput,
     Stack,
     Text,
     TextInput,
-    Center,
-    Flex,
-    Card,
 } from '@mantine/core';
-import { useForm } from '@inertiajs/react';
-import GoogleButton from '@/components/google-button';
-import GithubButton from '@/components/github-button';
-import Link from '@/components/link';
-import { request } from '@/wayfinder/routes/password';
-import { register } from '@/wayfinder/routes';
-import AuthenticatedSessionController from '@/wayfinder/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 
 interface Props extends CardProps {
     canResetPassword: boolean;
     status: string;
 }
 
-export default function AuthenticationForm({ canResetPassword, status, ...cardProps }: Props) {
+export default function AuthenticationForm({
+    canResetPassword,
+    status,
+    ...cardProps
+}: Props) {
     const form = useForm({
         email: '',
         password: '',
@@ -40,22 +43,28 @@ export default function AuthenticationForm({ canResetPassword, status, ...cardPr
         });
     };
 
+    const handleGithubLogin = () => {
+        window.location.href = '/oauth/github/redirect';
+    };
+
+    const handleGoogleLogin = () => {
+        window.location.href = '/oauth/google/redirect';
+    };
+
     return (
         <Center style={{ width: '100%', height: '100vh' }}>
-            <Card
-                p="lg"
-                w={400}
-                withBorder
-                shadow="sm"
-                {...cardProps}
-            >
+            <Card p="lg" w={400} withBorder shadow="sm" {...cardProps}>
                 <Text size="lg" fw={500}>
                     Welcome to Memora, login with
                 </Text>
 
                 <Group grow mt="md">
-                    <GoogleButton>Google</GoogleButton>
-                    <GithubButton>Github</GithubButton>
+                    <GoogleButton onClick={handleGoogleLogin}>
+                        Google
+                    </GoogleButton>
+                    <GithubButton onClick={handleGithubLogin}>
+                        Github
+                    </GithubButton>
                 </Group>
 
                 <Divider
@@ -77,7 +86,9 @@ export default function AuthenticationForm({ canResetPassword, status, ...cardPr
                             label="Email"
                             placeholder="mail@example.com"
                             value={form.data.email}
-                            onChange={(e) => form.setData('email', e.currentTarget.value)}
+                            onChange={(e) =>
+                                form.setData('email', e.currentTarget.value)
+                            }
                             error={form.errors.email}
                         />
 
@@ -86,14 +97,21 @@ export default function AuthenticationForm({ canResetPassword, status, ...cardPr
                             label="Password"
                             placeholder="Your password"
                             value={form.data.password}
-                            onChange={(e) => form.setData('password', e.currentTarget.value)}
+                            onChange={(e) =>
+                                form.setData('password', e.currentTarget.value)
+                            }
                             error={form.errors.password}
                         />
 
                         <Checkbox
                             label="Remember me"
                             checked={form.data.remember}
-                            onChange={(e) => form.setData('remember', e.currentTarget.checked)}
+                            onChange={(e) =>
+                                form.setData(
+                                    'remember',
+                                    e.currentTarget.checked,
+                                )
+                            }
                         />
                     </Stack>
 
@@ -115,10 +133,7 @@ export default function AuthenticationForm({ canResetPassword, status, ...cardPr
                             </Link>
                         </Flex>
 
-                        <Button
-                            type="submit"
-                            loading={form.processing}
-                        >
+                        <Button type="submit" loading={form.processing}>
                             Login
                         </Button>
                     </Group>
