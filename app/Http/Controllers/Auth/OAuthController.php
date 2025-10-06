@@ -18,17 +18,25 @@ class OAuthController extends Controller
     public function handleGithubAuthCallBack()
     {
         $oauthUser = Socialite::driver("github")->user();
-        $user = User::updateOrCreate(
-            [
+
+        $user = User::where('email', $oauthUser->email)->first();
+
+        if (!$user) {
+            $user = User::create([
                 'email' => $oauthUser->email,
-            ],
-            [
                 "name" => $oauthUser->name,
                 "provider_id" => $oauthUser->id,
                 'provider' => 'github'
-            ]
-        );
-        event(new Registered($user));
+            ]);
+            event(new Registered($user));
+        } else {
+            $user->update([
+                "name" => $oauthUser->name,
+                "provider_id" => $oauthUser->id,
+                'provider' => 'github'
+            ]);
+        }
+
         Auth::login($user);
         return redirect("dashboard");
     }
@@ -41,17 +49,25 @@ class OAuthController extends Controller
     public function handleGoogleAuthCallBack()
     {
         $oauthUser = Socialite::driver("google")->user();
-        $user = User::updateOrCreate(
-            [
+
+        $user = User::where('email', $oauthUser->email)->first();
+
+        if (!$user) {
+            $user = User::create([
                 'email' => $oauthUser->email,
-            ],
-            [
                 "name" => $oauthUser->name,
                 "provider_id" => $oauthUser->id,
                 'provider' => 'google'
-            ]
-        );
-        event(new Registered($user));
+            ]);
+            event(new Registered($user));
+        } else {
+            $user->update([
+                "name" => $oauthUser->name,
+                "provider_id" => $oauthUser->id,
+                'provider' => 'google'
+            ]);
+        }
+
         Auth::login($user);
         return redirect("dashboard");
     }
