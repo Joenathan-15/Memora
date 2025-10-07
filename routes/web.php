@@ -5,9 +5,11 @@ use App\Http\Controllers\DeckController;
 use App\Http\Controllers\FlashcardController;
 use App\Http\Controllers\ShopController;
 use App\Models\Deck;
+use App\Models\FlashcardReview;
 use App\Services\DailyRewardService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('welcome');
@@ -20,8 +22,8 @@ Route::get('/explore', function () {
 })->name('explore');
 
 Route::get('/explore/{uuid}', function (string $uuid) {
-    $deck = Deck::where("uuid",$uuid)->with('flashcards')->with("user")->first();
-    return Inertia::render("explore/show",[
+    $deck = Deck::where("uuid", $uuid)->with('flashcards')->with("user")->first();
+    return Inertia::render("explore/show", [
         "deck" => $deck
     ]);
 });
@@ -65,10 +67,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('/profile', function () {
-        $streak = \App\Models\FlashcardReview::getStreak();
-
+        $decks = Deck::where("user_id", auth()->user()->id)->count();
+        $masteredCards = FlashcardReview::where("user_id", auth()->user()->id)->where("quality", 5)->count();
+        $user = auth()->user()->load("UserInfo");
+        $loginStreak = $user->UserInfo->reward_streak_count;
         return Inertia::render('profile/index', [
-            'streak' => $streak,
+            'decks' => $decks,
+            "cardsMastered" => $masteredCards,
+            "loginStreak" => $loginStreak
         ]);
     });
     Route::get('/profile/edit', fn() => Inertia::render('profile/edit'));
@@ -81,7 +87,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{deck}', [DeckController::class, 'show'])->name('decks.show');
 
         // Import Deck
-        Route::post("/import/{uuid}",[DeckController::class,"import"])->name("deck.import");
+        Route::post("/import/{uuid}", [DeckController::class, "import"])->name("deck.import");
 
         // Edit decks
         Route::get('/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');
