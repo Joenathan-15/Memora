@@ -19,6 +19,13 @@ Route::get('/explore', function () {
     ]);
 })->name('explore');
 
+Route::get('/explore/{uuid}', function (string $uuid) {
+    $deck = Deck::where("uuid",$uuid)->with('flashcards')->with("user")->first();
+    return Inertia::render("explore/show",[
+        "deck" => $deck
+    ]);
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
         $user = auth()->user();
@@ -72,6 +79,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix("/decks")->group(function () {
         // Get decks
         Route::get('/{deck}', [DeckController::class, 'show'])->name('decks.show');
+
+        // Import Deck
+        Route::post("/import/{uuid}",[DeckController::class,"import"])->name("deck.import");
 
         // Edit decks
         Route::get('/{deck}/edit', [DeckController::class, 'edit'])->name('decks.edit');

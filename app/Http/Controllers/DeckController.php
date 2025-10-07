@@ -9,6 +9,7 @@ use App\Services\FlashcardGeneratorService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DeckController extends Controller
@@ -191,6 +192,36 @@ class DeckController extends Controller
     public function destroy(Deck $deck)
     {
         //
+    }
+
+
+    public function import(string $uuid)
+    {
+        $deck = Deck::where("uuid", $uuid)->first();
+        $flashcards = Flashcard::where("deck_id", $deck->id)->get();
+
+        try {
+            DB::beginTransaction();
+            $newDeck = Deck::create([
+                'title'       => $deck->title ?? "",
+                'description' => $deck->description ?? "",
+                'is_public'   => false,
+                'user_id'     => Auth()->user()->id,
+            ]);
+            foreach ($flashcards as $flashcard) {
+                Flashcard::create([
+                    'question' => $flashcard->question,
+                    'answer' => $flashcard->answer,
+                    'deck_id' => $newDeck->id,
+                    'is_ai_generated' => $flashcard->is_ai_generated
+                ]);
+            }
+            DB::commit();
+            return redirect()->route("home")->with('success', "Deck Has Been Import");
+        } catch (\Exception $err) {
+            DB::rollback();
+            return redirect()->route("home")->with('error', "fail to import Deck");
+        }
     }
 
     /**
