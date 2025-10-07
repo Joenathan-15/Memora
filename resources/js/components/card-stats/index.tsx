@@ -31,9 +31,10 @@ interface Props {
     href?: string;
     cards: number;
     created_at: string;
+    status: string;
 }
 
-export default function CardStats({ title, href, cards, created_at }: Props) {
+export default function CardStats({ title, href, cards, created_at, status }: Props) {
     stats[0].value = cards;
     const formattedDate = formatRelativeTime(created_at);
 
@@ -53,7 +54,9 @@ export default function CardStats({ title, href, cards, created_at }: Props) {
             <Group mt="-8" justify="space-between">
                 <span>🧠</span>
                 <Flex align="center" gap="sm">
-                    <Badge color="green">Ready</Badge>
+                    <Badge color={status === 'ready' ? 'red' : status === 'done' ? 'green' : 'gray'}>
+                        {status}
+                    </Badge>
                     <Link href={`decks/${href}/edit`}>
                         <ActionIcon variant="default" aria-label="Edit">
                             <IconAdjustments

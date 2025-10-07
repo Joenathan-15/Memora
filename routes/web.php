@@ -21,9 +21,35 @@ Route::get('/explore', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('home', function () {
+        $user = auth()->user();
+
+        $decks = Deck::forUser($user->id)
+            ->select(['id', 'uuid', 'title', 'created_at'])
+            ->withCount('flashcards')
+            ->withCount([
+                // flashcards that have a review for this user and are due
+                'flashcards as due_count' => function ($q) use ($user) {
+                    $q->whereHas('reviews', function ($qr) use ($user) {
+                        $qr->where('user_id', $user->id)
+                            ->where('next_review_date', '<=', now());
+                    });
+                },
+                // flashcards without a review record for this user
+                'flashcards as unreviewed_count' => function ($q) use ($user) {
+                    $q->whereDoesntHave('reviews', function ($qr) use ($user) {
+                        $qr->where('user_id', $user->id);
+                    });
+                },
+            ])
+            ->get()
+            ->map(function ($deck) {
+                $deck->status = ($deck->due_count > 0 || $deck->unreviewed_count > 0) ? 'ready' : 'done';
+                return $deck;
+            });
+
         return Inertia::render('dashboard', [
-            'decks' => Deck::select(['uuid', 'title', 'created_at'])->withCount('flashcards')->where('user_id', auth()->id())->get(),
-            'rewardInfo' => app(DailyRewardService::class)->getUserRewardInfo(auth()->user()),
+            'decks' => $decks,
+            'rewardInfo' => app(DailyRewardService::class)->getUserRewardInfo($user),
         ]);
     })->name('home');
 

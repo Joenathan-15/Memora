@@ -55,4 +55,27 @@ class Deck extends Model
     public function flashcards(): HasMany {
         return $this->hasMany(Flashcard::class);
     }
+
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function getStatusAttribute()
+    {
+        if (isset($this->due_count) && isset($this->unreviewed_count)) {
+            return ($this->due_count > 0 || $this->unreviewed_count > 0) ? 'ready' : 'done';
+        }
+
+        // fallback: compute without loading all flashcards
+        $due = $this->flashcards()->whereHas('reviews', function ($q) {
+            $q->where('user_id', auth()->id())->where('next_review_date', '<=', now());
+        })->exists();
+
+        $unreviewed = $this->flashcards()->whereDoesntHave('reviews', function ($q) {
+            $q->where('user_id', auth()->id());
+        })->exists();
+
+        return ($due || $unreviewed) ? 'ready' : 'done';
+    }
 }

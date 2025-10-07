@@ -27,6 +27,7 @@ interface Deck {
     title: string;
     created_at: string;
     flashcards_count: number;
+    status: string;
 }
 
 interface Props {
@@ -63,7 +64,6 @@ export default function Dashboard({ decks }: Props) {
             <Head title="Dashboard" />
             <DailyRewardNotification rewardInfo={props.rewardInfo} />
 
-
             <Container fluid>
                 <Grid
                     align="flex-start"
@@ -77,6 +77,7 @@ export default function Dashboard({ decks }: Props) {
                                     href={deck.uuid}
                                     cards={deck.flashcards_count}
                                     created_at={deck.created_at}
+                                    status={deck.status}
                                 />
                             ))}
                         </SimpleGrid>
