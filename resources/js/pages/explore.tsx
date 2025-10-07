@@ -1,6 +1,6 @@
 import CardExplore from '@/components/card-explore';
 import GuestLayout from '@/layouts/guest-layout';
-import { Head } from '@inertiajs/react';
+import { Head,Link } from '@inertiajs/react';
 import {
     ActionIcon,
     Card,
@@ -40,7 +40,6 @@ export default function Welcome({ decks }: Props) {
                                     <TextInput
                                         onChange={() => {
                                             // Handle search input change
-
                                         }}
                                         placeholder="Search a deck..."
                                         size="sm"
@@ -74,7 +73,7 @@ export default function Welcome({ decks }: Props) {
                                     ]}
                                 />
                             </Card>
-                            <Card withBorder h={{base: 250, md: 'auto'}}>
+                            <Card withBorder h={{ base: 250, md: 'auto' }}>
                                 <Text mb={12}>Category</Text>
                                 <ScrollArea h={'40vh'}>
                                     <Stack>
@@ -104,12 +103,14 @@ export default function Welcome({ decks }: Props) {
                                 >
                                     {decks.length > 0 ? (
                                         decks.map((deck) => (
-                                            <CardExplore
-                                                key={deck.uuid}
-                                                title={deck.title}
-                                                created_at={deck.created_at}
-                                                badge={undefined}
-                                            />
+                                            <Link href={`/explore/${deck.uuid}`}>
+                                                <CardExplore
+                                                    key={deck.uuid}
+                                                    title={deck.title}
+                                                    created_at={deck.created_at}
+                                                    badge={undefined}
+                                                />
+                                            </Link>
                                         ))
                                     ) : (
                                         <Text>No decks found.</Text>

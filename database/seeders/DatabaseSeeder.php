@@ -155,7 +155,7 @@ class DatabaseSeeder extends Seeder
          */
         $deck2 = Deck::firstOrCreate(
             ['title' => 'Pancasila dan Kewarganegaraan', 'user_id' => 1],
-            ['description' => 'Pemahaman nilai, sila, dan penerapan Pancasila dalam kehidupan berbangsa.']
+            ['description' => 'Pemahaman nilai, sila, dan penerapan Pancasila dalam kehidupan berbangsa.',"is_public" => true]
         );
 
         $flashcards2 = [
@@ -177,7 +177,7 @@ class DatabaseSeeder extends Seeder
          */
         $deck3 = Deck::firstOrCreate(
             ['title' => 'Basic English Grammar and Vocabulary', 'user_id' => 1],
-            ['description' => 'Fundamental grammar, vocabulary, and daily expressions in English.']
+            ['description' => 'Fundamental grammar, vocabulary, and daily expressions in English.', "is_public" => true],
         );
 
         $flashcards3 = [

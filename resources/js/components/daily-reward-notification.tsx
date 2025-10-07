@@ -47,8 +47,8 @@ export function DailyRewardNotification({ rewardInfo }: DailyRewardNotificationP
             id: 'daily-reward',
             autoClose: false,
             withCloseButton: true,
-            onClose: () => console.log('Daily reward notification closed'),
-            onOpen: () => console.log('Daily reward notification opened'),
+            // onClose: () => console.log('Daily reward notification closed'),
+            // onOpen: () => console.log('Daily reward notification opened'),
             title: "Daily Reward Available!",
             color: 'green',
             message: (
