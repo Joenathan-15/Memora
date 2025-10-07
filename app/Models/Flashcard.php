@@ -17,6 +17,7 @@ class Flashcard extends Model
         'question',
         'answer',
         'deck_id',
+        'is_ai_generated',
 
         'created_by',
         'updated_by',

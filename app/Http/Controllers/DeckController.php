@@ -69,6 +69,7 @@ class DeckController extends Controller
                         'question' => $item["question"],
                         'answer' => $item["answer"],
                         'deck_id' => $deck["id"],
+                        'is_ai_generated' => true
                     ]);
                 }
             }
@@ -126,6 +127,7 @@ class DeckController extends Controller
                 'accuracy' => $review->review_count > 0
                     ? round(($review->correct_count / $review->review_count) * 100)
                     : null,
+                'is_ai_generated' => $flashcard->is_ai_generated,
             ];
         });
 
