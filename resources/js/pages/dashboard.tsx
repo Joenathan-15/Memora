@@ -103,7 +103,7 @@ export default function Dashboard({ decks }: Props) {
                         <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
                             {decks.map((deck) => (
                                 <CardStats
-                                    key={deck.uuid} // use stable unique key
+                                    key={deck.uuid}
                                     title={deck.title}
                                     href={deck.uuid}
                                     cards={deck.flashcards_count}
