@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -19,7 +20,6 @@ class Deck extends Model
         'description',
         'is_public',
         'user_id',
-
         'created_by',
         'updated_by',
         'deleted_by',
@@ -48,17 +48,65 @@ class Deck extends Model
         return 'uuid';
     }
 
-    public function user(): BelongsTo {
-        return $this->belongsTo(User::class);
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function flashcards(): HasMany {
+    public function collaborators(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'deck_collaborators')
+            ->using(DeckCollaborator::class)
+            ->withTimestamps();
+    }
+
+    public function usersWithAccess(): BelongsToMany
+    {
+        return $this->collaborators();
+    }
+
+    public function flashcards(): HasMany
+    {
         return $this->hasMany(Flashcard::class);
     }
 
-    public function scopeForUser($query, $userId)
+    public function isAccessibleBy(User $user): bool
     {
-        return $query->where('user_id', $userId);
+        return $this->user_id === $user->id ||
+            $this->collaborators()->where('user_id', $user->id)->exists();
+    }
+
+    public function isOwnedBy(User $user): bool
+    {
+        return $this->user_id === $user->id;
+    }
+
+    public function isCollaborator(User $user): bool
+    {
+        return !$this->isOwnedBy($user) &&
+            $this->collaborators()->where('user_id', $user->id)->exists();
+    }
+
+    public function scopeAccessibleBy($query, User $user)
+    {
+        return $query->where(function ($q) use ($user) {
+            $q->where('user_id', $user->id)
+                ->orWhereHas('collaborators', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                });
+        });
+    }
+
+    public function scopeOwnedBy($query, User $user)
+    {
+        return $query->where('user_id', $user->id);
+    }
+
+    public function scopeWhereCollaborator($query, User $user)
+    {
+        return $query->whereHas('collaborators', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->where('user_id', '!=', $user->id);
     }
 
     public function getStatusAttribute()

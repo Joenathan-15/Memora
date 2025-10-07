@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -54,6 +56,23 @@ class User extends Authenticatable
     public function UserInfo()
     {
         return $this->hasOne(UserInfo::class);
+    }
+
+    public function ownedDecks(): HasMany
+    {
+        return $this->hasMany(Deck::class, 'user_id');
+    }
+
+    public function collaboratedDecks(): BelongsToMany
+    {
+        return $this->belongsToMany(Deck::class, 'deck_collaborators')
+            ->using(DeckCollaborator::class)
+            ->withTimestamps();
+    }
+
+    public function accessibleDecks()
+    {
+        return Deck::accessibleBy($this);
     }
 
     public function hasActiveSubscription(): bool

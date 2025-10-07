@@ -8,12 +8,15 @@ use App\Models\Flashcard;
 use App\Services\FlashcardGeneratorService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DeckController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
@@ -97,18 +100,15 @@ class DeckController extends Controller
     {
         $userId = auth()->id();
 
-        // Get all flashcards for the deck
         $allFlashcards = $deck->flashcards()
             ->with(['userReview' => function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             }])
             ->get();
 
-        // Process flashcards to determine which are due
         $flashcardsWithStatus = $allFlashcards->map(function ($flashcard) use ($userId) {
             $review = $flashcard->userReview;
 
-            // If no review exists, card is new and due immediately
             if (!$review) {
                 $review = $flashcard->getOrCreateUserReview($userId);
             }
@@ -132,11 +132,9 @@ class DeckController extends Controller
             ];
         });
 
-        // Separate due cards from future cards
         $dueCards = $flashcardsWithStatus->filter(fn($card) => $card['is_due']);
         $futureCards = $flashcardsWithStatus->filter(fn($card) => !$card['is_due']);
 
-        // Calculate statistics
         $stats = [
             'total_cards' => $allFlashcards->count(),
             'due_today' => $dueCards->count(),
@@ -157,8 +155,12 @@ class DeckController extends Controller
      */
     public function edit(Deck $deck)
     {
+        $this->authorize('view', $deck);
+
         return Inertia::render('decks/edit', [
-            'deck' => $deck->load('flashcards'),
+            'deck' => $deck->load('flashcards', 'owner', 'collaborators'),
+            'is_owner' => $deck->isOwnedBy(auth()->user()),
+            'is_collaborator' => $deck->isCollaborator(auth()->user()),
         ]);
     }
 

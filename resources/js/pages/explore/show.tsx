@@ -38,13 +38,13 @@ interface Deck {
     description?: string | null;
     is_public?: boolean;
     flashcards?: Flashcard[] | null;
-    user: User;
+    owner: User;
 }
 
 const ExploreShow: PageWithLayout = () => {
     const { deck } = usePage().props as unknown as { deck: Deck };
     const flashcards = deck?.flashcards ?? [];
-    const user = deck?.user;
+    const user = deck?.owner;
     const isMd = useMediaQuery('(min-width: 768px)');
 
     const INITIAL_SHOW = 10;
