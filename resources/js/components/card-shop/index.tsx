@@ -40,7 +40,7 @@ export default function CardShop({
                         {name}
                     </Text>
                     <Text fw={700} size="lg" c="blue">
-                        {formatRupiah(price)}
+                        {quantity > 0 ? ('💎 ' + quantity) : null}
                     </Text>
                 </Group>
 
@@ -58,7 +58,7 @@ export default function CardShop({
                         router.post('/shop', { product_id: id });
                     }}
                 >
-                    Purchase Now
+                    Purchase For {formatRupiah(price)}
                 </Button>
             </Stack>
         </Card>
