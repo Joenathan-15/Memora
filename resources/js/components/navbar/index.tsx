@@ -30,7 +30,7 @@ export function Navbar() {
                 mx={12}
                 fw={800}
             >
-                Memora
+                Memoraa
             </Text>
             <Stack className={classes.section}>
                 {mainLinks.map((link) => {

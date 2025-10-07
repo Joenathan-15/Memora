@@ -1,47 +1,54 @@
 import {
     IconHome,
-    IconMap,
+    IconCompass,
     IconCirclePlus,
     IconBuildingStore,
     IconUser,
 } from '@tabler/icons-react';
-import { Flex, Stack, Text, UnstyledButton } from '@mantine/core';
+import { Flex, Tooltip } from '@mantine/core';
 import classes from './index.module.css';
 import Link from '@/components/link';
 import { usePage } from '@inertiajs/react';
 
 const mainLinks = [
     { icon: IconHome, label: 'Home', url: '/home', name: 'upload' },
-    { icon: IconMap, label: 'Explore', url: '/explore', name: 'decks.index' },
-    { icon: IconCirclePlus, label: 'Create Deck', url: '/create', name: 'decks.create' },
+    { icon: IconCompass, label: 'Explore', url: '/explore', name: 'decks.index' },
+    { icon: IconCirclePlus, label: 'Create', url: '/create', name: 'decks.create' },
     { icon: IconBuildingStore, label: 'Shop', url: '/shop', name: 'decks.due' },
     { icon: IconUser, label: 'Profile', url: '/profile', name: 'profile' },
 ];
 
 export function BottomNavbar() {
-    const { url, component } = usePage(); // url = current path, component = current inertia page
+    const { url } = usePage();
 
     return (
         <nav className={classes.navbar}>
-            <Flex justify="space-between" gap="md" h="2rem">
+            <Flex justify="space-around" align="center" h="100%">
                 {mainLinks.map((link) => {
                     const isActive = url.startsWith(link.url);
 
                     return (
-                        <Link
-                            href={link.url}
-                            underline="never"
+                        <Tooltip
                             key={link.label}
-                            className={`${classes.mainLink} ${isActive ? classes.activeLink : ''}`}
+                            label={link.label}
+                            position="top"
+                            withArrow
+                            openDelay={300}
                         >
-                            <div className={classes.mainLinkInner} >
-                                <link.icon
-                                    size={30}
-                                    className={classes.mainLinkIcon}
-                                    stroke={1.5}
-                                />
-                            </div>
-                        </Link>
+                            <Link
+                                href={link.url}
+                                underline="never"
+                                className={`${classes.mainLink} ${isActive ? classes.activeLink : ''}`}
+                            >
+                                <div className={classes.mainLinkInner}>
+                                    <link.icon
+                                        size={26}
+                                        className={classes.mainLinkIcon}
+                                        stroke={1.8}
+                                    />
+                                </div>
+                            </Link>
+                        </Tooltip>
                     );
                 })}
             </Flex>

@@ -1,24 +1,26 @@
 import CardStats from '@/components/card-stats';
+import { DailyRewardNotification } from '@/components/daily-reward-notification';
 import AuthLayout from '@/layouts/auth-layout';
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, usePage } from '@inertiajs/react';
 import {
     Button,
-    Card,
     Container,
     Flex,
-    Grid,
-    Group,
     SimpleGrid,
     Stack,
     Text,
+    Title,
+    Paper,
+    Group,
+    Card,
     ThemeIcon,
+    Badge,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconFileText, IconUpload } from '@tabler/icons-react';
-import { useEffect } from 'react';
 import { notifications } from '@mantine/notifications';
-import { DailyRewardNotification } from '@/components/daily-reward-notification';
-import type { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { IconFileText, IconUpload, IconCrown } from '@tabler/icons-react';
+import { useEffect } from 'react';
 
 interface Deck {
     uuid: string;
@@ -35,6 +37,8 @@ interface Props {
 /* --- page-level types --- */
 interface UserInfo {
     gems: number;
+    is_super: boolean;
+    subscription_plan: string;
     [k: string]: any;
 }
 interface User {
@@ -68,9 +72,8 @@ interface PageProps extends InertiaPageProps {
 /* --- component --- */
 export default function Dashboard({ decks }: Props) {
     const isMobile = useMediaQuery('(max-width: 800px)');
-    const { props } = usePage<PageProps>(); // <-- typed usePage
+    const { props } = usePage<PageProps>();
     const user = props.auth.user;
-
     useEffect(() => {
         const flash = props.flash;
         if (flash?.success) {
@@ -92,94 +95,251 @@ export default function Dashboard({ decks }: Props) {
         }
     }, [props.flash]);
 
+    const totalCards = decks.reduce((sum, deck) => sum + deck.flashcards_count, 0);
+
     return (
         <>
             <Head title="Dashboard" />
-            {props.rewardInfo && <DailyRewardNotification rewardInfo={props.rewardInfo} />}
+            {props.rewardInfo && (
+                <DailyRewardNotification rewardInfo={props.rewardInfo} />
+            )}
 
-            <Container fluid>
-                <Grid align="flex-start">
-                    <Grid.Col span={{ base: 12, md: 9 }}>
-                        <SimpleGrid cols={{ base: 1, lg: 3, xs: 2 }}>
-                            {decks.map((deck) => (
-                                <CardStats
-                                    key={deck.uuid}
-                                    title={deck.title}
-                                    href={deck.uuid}
-                                    cards={deck.flashcards_count}
-                                    created_at={deck.created_at}
-                                    status={deck.status}
-                                />
-                            ))}
-                        </SimpleGrid>
-                    </Grid.Col>
+            <Container size="xl" p="md">
+                <Flex justify="space-between" align="center" mb="xl">
+                    <Stack gap="xs">
+                        <Title order={1} size="h2">
+                            Your Decks
+                        </Title>
+                        <Text c="dimmed" size="lg">
+                            {decks.length} decks • {totalCards} total cards
+                        </Text>
+                    </Stack>
 
-                    <Grid.Col span={{ base: 12, md: 3 }}>
-                        <Stack
-                            gap={'md'}
-                            style={{
-                                position: 'sticky',
-                                top: 20,
-                                alignSelf: 'flex-start',
+                    {!isMobile && (
+                        <Badge
+                            variant="light"
+                            color="yellow"
+                            size="xl"
+                            leftSection="💎"
+                            styles={{
+                                root: {
+                                    paddingLeft: '12px',
+                                    paddingRight: '16px',
+                                    height: '40px'
+                                }
                             }}
                         >
-                            <Text
-                                size="xl"
-                                className="items-center"
-                                style={{ display: isMobile ? 'none' : 'block' }}
-                            >
-                                💎 <span className="font-bold">{user.user_info.gems}</span>
+                            <Text fw={700} size="lg">
+                                {user.user_info.gems}
                             </Text>
+                        </Badge>
+                    )}
+                </Flex>
 
-                            <Card withBorder>
+                <Group justify="space-between" mb="xl">
+                    <Link href="/create" as="a">
+                        <Button
+                            leftSection={<IconUpload size={16} />}
+                            variant="gradient"
+                            gradient={{ from: 'blue', to: 'cyan' }}
+                            size={isMobile ? 'sm' : 'md'}
+                        >
+                            Create New Deck
+                        </Button>
+                    </Link>
+
+                    {isMobile && (
+                        <Badge
+                            variant="light"
+                            color="yellow"
+                            size="lg"
+                            leftSection="💎"
+                        >
+                            <Text fw={700} size="sm">
+                                {user.user_info.gems}
+                            </Text>
+                        </Badge>
+                    )}
+                </Group>
+
+                {isMobile ? (
+                    <Stack gap="xl">
+                        {user.user_info.subscription_plan == "free" && (
+                            <Card withBorder p="lg" radius="md">
                                 <Stack gap="md">
-                                    <Flex align="center" justify="space-between" gap="lg">
-                                        <div>
-                                            <Text fw={500}>Quick Upload</Text>
-                                            <Text size="sm" c="dimmed">
-                                                Send us your study material and get
-                                                flashcards in seconds.
-                                            </Text>
-                                        </div>
-                                        <ThemeIcon size="xl" variant="light" color="blue">
-                                            <IconUpload size={24} />
+                                    <Flex align="center" gap="sm">
+                                        <ThemeIcon size={40} variant="filled" color="yellow">
+                                            <IconCrown size={20} />
                                         </ThemeIcon>
-                                    </Flex>
-
-                                    <Group gap="sm">
-                                        <Link href="/create" as="a">
-                                            <Button leftSection={<IconFileText size={16} />} variant="default" size={isMobile ? 'sm' : 'md'}>
-                                                Upload PDF
-                                            </Button>
-                                        </Link>
-                                    </Group>
-                                </Stack>
-                            </Card>
-
-                            <Card withBorder>
-                                <Stack gap="md">
-                                    <Stack gap="md">
-                                        <Stack gap="0" w="100%" align="center">
-                                            <Text fw={500}>Using an ad blocker?</Text>
-                                            <Text fw={500} size="sm" c="dimmed" ta="center">
-                                                Stay sharp with Super and skip the ads
+                                        <Stack gap={2}>
+                                            <Text fw={600} size="lg">
+                                                Go Super
+                                            </Text>
+                                            <Text size="sm" c="dimmed">
+                                                Unlock premium features
                                             </Text>
                                         </Stack>
+                                    </Flex>
+
+                                    <Stack gap="xs">
+                                        <Text size="sm">• Ad-free experience</Text>
+                                        <Text size="sm">• Unlimited decks</Text>
                                     </Stack>
 
-                                    <Group gap="sm" align="center">
-                                        <Button variant="filled" size={isMobile ? 'sm' : 'md'} w="100%">
-                                            Try Super for Free
+                                    <Link href="/shop" as="a">
+                                        <Button
+                                            fullWidth
+                                            variant="filled"
+                                            color="yellow"
+                                            leftSection={<IconCrown size={16} />}
+                                        >
+                                            Try Super Free
                                         </Button>
-                                        <Button variant="subtle" size={isMobile ? 'sm' : 'md'} w="100%">
-                                            Disable ad blocker
-                                        </Button>
-                                    </Group>
+                                    </Link>
                                 </Stack>
                             </Card>
-                        </Stack>
-                    </Grid.Col>
-                </Grid>
+                        )}
+
+                        {/* Decks Grid */}
+                        {decks.length === 0 ? (
+                            <Paper withBorder p="xl" ta="center" radius="md">
+                                <Stack gap="lg">
+                                    <IconFileText size={60} color="var(--mantine-color-gray-5)" />
+                                    <Stack gap="xs">
+                                        <Title order={3} size="h3">
+                                            No decks yet
+                                        </Title>
+                                        <Text c="dimmed" size="lg">
+                                            Create your first deck to start learning
+                                        </Text>
+                                    </Stack>
+                                    <Link href="/create" as="a">
+                                        <Button
+                                            leftSection={<IconUpload size={16} />}
+                                            variant="gradient"
+                                            gradient={{ from: 'blue', to: 'cyan' }}
+                                            size="lg"
+                                        >
+                                            Create Your First Deck
+                                        </Button>
+                                    </Link>
+                                </Stack>
+                            </Paper>
+                        ) : (
+                            <SimpleGrid cols={1} spacing="lg">
+                                {decks.map((deck) => (
+                                    <CardStats
+                                        key={deck.uuid}
+                                        title={deck.title}
+                                        href={deck.uuid}
+                                        cards={deck.flashcards_count}
+                                        created_at={deck.created_at}
+                                        status={deck.status}
+                                    />
+                                ))}
+                            </SimpleGrid>
+                        )}
+                    </Stack>
+                ) : (
+                    <Flex gap="xl" align="flex-start">
+                        {/* Decks Grid */}
+                        <div style={{ flex: 1 }}>
+                            {decks.length === 0 ? (
+                                <Paper withBorder p="xl" ta="center" radius="md">
+                                    <Stack gap="lg">
+                                        <IconFileText size={60} color="var(--mantine-color-gray-5)" />
+                                        <Stack gap="xs">
+                                            <Title order={3} size="h3">
+                                                No decks yet
+                                            </Title>
+                                            <Text c="dimmed" size="lg">
+                                                Create your first deck to start learning
+                                            </Text>
+                                        </Stack>
+                                        <Link href="/create" as="a">
+                                            <Button
+                                                leftSection={<IconUpload size={16} />}
+                                                variant="gradient"
+                                                gradient={{ from: 'blue', to: 'cyan' }}
+                                                size="lg"
+                                            >
+                                                Create Your First Deck
+                                            </Button>
+                                        </Link>
+                                    </Stack>
+                                </Paper>
+                            ) : (
+                                <SimpleGrid
+                                    cols={2}
+                                    spacing="lg"
+                                    styles={{
+                                        root: {
+                                            '& > *': {
+                                                minHeight: '200px',
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {decks.map((deck) => (
+                                        <CardStats
+                                            key={deck.uuid}
+                                            title={deck.title}
+                                            href={deck.uuid}
+                                            cards={deck.flashcards_count}
+                                            created_at={deck.created_at}
+                                            status={deck.status}
+                                        />
+                                    ))}
+                                </SimpleGrid>
+                            )}
+                        </div>
+                        {user.user_info.subscription_plan == "free" && (
+                            <Card
+                                withBorder
+                                p="lg"
+                                radius="md"
+                                style={{
+                                    width: 320,
+                                    position: 'sticky',
+                                    top: 20
+                                }}
+                            >
+                                <Stack gap="md">
+                                    <Flex align="center" gap="sm">
+                                        <ThemeIcon size={40} variant="filled" color="yellow">
+                                            <IconCrown size={20} />
+                                        </ThemeIcon>
+                                        <Stack gap={2}>
+                                            <Text fw={600} size="lg">
+                                                Go Super
+                                            </Text>
+                                            <Text size="sm" c="dimmed">
+                                                Unlock premium features
+                                            </Text>
+                                        </Stack>
+                                    </Flex>
+
+                                    <Stack gap="xs">
+                                        <Text size="sm">• Ad-free experience</Text>
+                                        <Text size="sm">• Unlimited decks</Text>
+                                    </Stack>
+
+                                    <Link href="/shop" as="a">
+                                        <Button
+                                            fullWidth
+                                            variant="filled"
+                                            color="yellow"
+                                            leftSection={<IconCrown size={16} />}
+                                            style={{ marginTop: 'auto' }}
+                                        >
+                                            Try Super Free
+                                        </Button>
+                                    </Link>
+                                </Stack>
+                            </Card>
+                        )}
+                    </Flex>
+                )}
             </Container>
         </>
     );

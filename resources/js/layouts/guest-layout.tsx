@@ -21,169 +21,269 @@ import {
     useComputedColorScheme,
     useMantineColorScheme,
     useMantineTheme,
+    Container,
+    ActionIcon,
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
-import { IconMoon, IconSun } from '@tabler/icons-react';
+import { IconMoon, IconSun, IconHome, IconCompass, IconPlus, IconUser, IconLogout } from '@tabler/icons-react';
 import classes from './guest.navbar.module.css';
 
 export default function GuestLayout({ child }: LayoutProps) {
     const { auth } = usePage<SharedData>().props;
-    const { setColorScheme, clearColorScheme } = useMantineColorScheme();
-    const computeColorScheme = useComputedColorScheme();
+    const { setColorScheme } = useMantineColorScheme();
+    const computedColorScheme = useComputedColorScheme();
     const isMobile = useMediaQuery('(max-width: 800px)');
     const theme = useMantineTheme();
     const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
         useDisclosure(false);
 
+    const toggleTheme = () => {
+        setColorScheme(computedColorScheme === 'dark' ? 'light' : 'dark');
+    };
+
     return (
         <>
             <header
-                className="sticky top-0 z-50 flex justify-between border-b p-5"
+                className="sticky top-0 z-50 border-b"
                 style={{
                     borderColor: 'var(--mantine-color-default-border)',
-                    background: 'var(--mantine-color-default)',
+                    background: 'var(--mantine-color-body)',
+                    backdropFilter: 'blur(10px)',
                 }}
             >
-                <nav>
-                    <Flex gap={12}>
-                        <Text
-                            size="xl"
-                            c="blue"
-                            className="tracking-widest"
-                            mx={12}
-                            fw={800}
-                        >
-                            Memora
-                        </Text>
-                        <Group hidden={isMobile}>
+                <Container size="xl">
+                    <div className="flex h-16 items-center justify-between">
+                        {/* Logo */}
+                        <Link href={auth.user ? dashboard() : '/'} className="flex items-center gap-2 no-underline">
+                            <Text
+                                size="xl"
+                                fw={900}
+                                variant="gradient"
+                                gradient={{ from: 'blue', to: 'cyan' }}
+                                className="tracking-tight"
+                            >
+                                Memora
+                            </Text>
+                        </Link>
+
+                        {/* Desktop Navigation */}
+                        <Group hidden={isMobile} gap="md">
                             {auth.user ? (
                                 <>
-                                    <Link href={dashboard()}>
-                                        <Button>Dashboard</Button>
-                                    </Link>
-                                    <Link href={logout()}>
-                                        <Button>Logout</Button>
-                                    </Link>
+                                    <Group gap="sm">
+                                        <Link href={dashboard()}>
+                                            <Button
+                                                variant="subtle"
+                                                leftSection={<IconHome size={16} />}
+                                                size="sm"
+                                            >
+                                                Dashboard
+                                            </Button>
+                                        </Link>
+                                        <Link href={explore()}>
+                                            <Button
+                                                variant="subtle"
+                                                leftSection={<IconCompass size={16} />}
+                                                size="sm"
+                                            >
+                                                Explore
+                                            </Button>
+                                        </Link>
+                                        <Link href="/create">
+                                            <Button
+                                                variant="subtle"
+                                                leftSection={<IconPlus size={16} />}
+                                                size="sm"
+                                            >
+                                                Create
+                                            </Button>
+                                        </Link>
+                                    </Group>
+                                    <Group gap="xs">
+                                        <Link href="/profile">
+                                            <Button
+                                                variant="subtle"
+                                                leftSection={<IconUser size={16} />}
+                                                size="sm"
+                                            >
+                                                Profile
+                                            </Button>
+                                        </Link>
+                                        <Link href={logout()}>
+                                            <Button
+                                                variant="outline"
+                                                color="red"
+                                                leftSection={<IconLogout size={16} />}
+                                                size="sm"
+                                            >
+                                                Logout
+                                            </Button>
+                                        </Link>
+                                    </Group>
                                 </>
                             ) : (
-                                <>
+                                <Group gap="sm">
+                                    <Link href={explore()}>
+                                        <Button variant="subtle" size="sm">
+                                            Explore
+                                        </Button>
+                                    </Link>
                                     <Link href={login()}>
-                                        <Button>Log in</Button>
+                                        <Button variant="default" size="sm">
+                                            Log in
+                                        </Button>
                                     </Link>
                                     <Link href={register()}>
-                                        <Button>Register</Button>
+                                        <Button size="sm">
+                                            Sign up
+                                        </Button>
                                     </Link>
-                                </>
+                                </Group>
                             )}
+
+                            {/* Theme Toggle */}
+                            <ActionIcon
+                                variant="subtle"
+                                size="lg"
+                                onClick={toggleTheme}
+                                aria-label="Toggle color scheme"
+                            >
+                                {computedColorScheme === 'dark' ? (
+                                    <IconSun size={18} />
+                                ) : (
+                                    <IconMoon size={18} />
+                                )}
+                            </ActionIcon>
                         </Group>
-                    </Flex>
-                </nav>
-                <Group hidden={isMobile}>
-                    <Button
-                        onClick={() =>
-                            setColorScheme(
-                                computeColorScheme === 'dark'
-                                    ? 'light'
-                                    : 'dark',
-                            )
-                        }
-                    >
-                        {computeColorScheme === 'dark' ? (
-                            <IconSun />
-                        ) : (
-                            <IconMoon />
-                        )}
-                    </Button>
-                </Group>
-                <Burger
-                    opened={drawerOpened}
-                    onClick={toggleDrawer}
-                    hiddenFrom="md"
-                />
+
+                        {/* Mobile Menu Button */}
+                        <Group visibleFrom="md" hidden>
+                            <ActionIcon
+                                variant="subtle"
+                                size="lg"
+                                onClick={toggleTheme}
+                                aria-label="Toggle color scheme"
+                            >
+                                {computedColorScheme === 'dark' ? (
+                                    <IconSun size={18} />
+                                ) : (
+                                    <IconMoon size={18} />
+                                )}
+                            </ActionIcon>
+                        </Group>
+
+                        <Burger
+                            opened={drawerOpened}
+                            onClick={toggleDrawer}
+                            hiddenFrom="md"
+                            size="sm"
+                        />
+                    </div>
+                </Container>
             </header>
 
+            {/* Mobile Drawer */}
             <Drawer
                 opened={drawerOpened}
                 onClose={closeDrawer}
                 size="100%"
                 padding="md"
-                title="Menu"
-                hiddenFrom="sm"
+                title={
+                    <Text fw={700} size="lg">
+                        Menu
+                    </Text>
+                }
+                hiddenFrom="md"
                 zIndex={1000000}
             >
-                <ScrollArea h="calc(100vh - 80px" mx="-md">
+                <ScrollArea h="calc(100vh - 80px)" mx="-md">
                     <Divider my="sm" />
 
-                    {auth.user ? (
-                        <>
-                            <Link href={dashboard()} className={classes.link}>
-                                Home
-                            </Link>
-                            <Link href={explore()} className={classes.link}>
-                                Explore
-                            </Link>
-                            <Link href="/create" className={classes.link}>
-                                Create Deck
-                            </Link>
-                            <Link href="/store" className={classes.link}>
-                                Store
-                            </Link>
-                            <Link href="/profile" className={classes.link}>
-                                Profile
-                            </Link>
-                        </>
-                    ) : (
-                        <Link href="/explore" className={classes.link}>
-                            Explore
-                        </Link>
-                    )}
-
-                    <Divider my={'md'} />
-                    <Stack justify="center" pb="xl" px="sm">
+                    <Stack gap="sm" p="md">
                         {auth.user ? (
-                            <Group justify="center" grow pb="md" px="md">
-                                <Button variant="default">
-                                    <Link href={dashboard()} as={'a'}>
-                                        Dashboard
-                                    </Link>
-                                </Button>
-                                <Button variant="filled">
-                                    <Link href={logout()} as={'a'}>
-                                        Logout
-                                    </Link>
-                                </Button>
-                            </Group>
+                            <>
+                                <Link href={dashboard()} className={classes.link} onClick={closeDrawer}>
+                                    <Group gap="sm">
+                                        <IconHome size={18} />
+                                        <Text>Dashboard</Text>
+                                    </Group>
+                                </Link>
+                                <Link href={explore()} className={classes.link} onClick={closeDrawer}>
+                                    <Group gap="sm">
+                                        <IconCompass size={18} />
+                                        <Text>Explore</Text>
+                                    </Group>
+                                </Link>
+                                <Link href="/create" className={classes.link} onClick={closeDrawer}>
+                                    <Group gap="sm">
+                                        <IconPlus size={18} />
+                                        <Text>Create Deck</Text>
+                                    </Group>
+                                </Link>
+                                <Link href="/profile" className={classes.link} onClick={closeDrawer}>
+                                    <Group gap="sm">
+                                        <IconUser size={18} />
+                                        <Text>Profile</Text>
+                                    </Group>
+                                </Link>
+                            </>
                         ) : (
-                            <Group justify="center" grow pb="sm" px="md">
-                                <Button variant="default">
-                                    <Link href={login()} as={'a'}>
-                                        Log in
-                                    </Link>
-                                </Button>
-                                <Button>
-                                    <Link href={register()} as={'a'}>
-                                        Sign up
-                                    </Link>
-                                </Button>
-                            </Group>
+                            <Link href={explore()} className={classes.link} onClick={closeDrawer}>
+                                <Group gap="sm">
+                                    <IconCompass size={18} />
+                                    <Text>Explore</Text>
+                                </Group>
+                            </Link>
                         )}
+                    </Stack>
+
+                    <Divider my="md" />
+
+                    <Stack p="md" gap="md">
+                        {/* Theme Toggle in Drawer */}
                         <Button
-                            px={'xl'}
                             fullWidth
-                            onClick={() =>
-                                setColorScheme(
-                                    computeColorScheme === 'dark'
-                                        ? 'light'
-                                        : 'dark',
+                            variant="light"
+                            onClick={toggleTheme}
+                            leftSection={
+                                computedColorScheme === 'dark' ? (
+                                    <IconSun size={16} />
+                                ) : (
+                                    <IconMoon size={16} />
                                 )
                             }
                         >
-                            {computeColorScheme === 'dark' ? (
-                                <IconSun />
-                            ) : (
-                                <IconMoon />
-                            )}
+                            {computedColorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                         </Button>
+
+                        {/* Auth Buttons in Drawer */}
+                        {auth.user ? (
+                            <Stack gap="sm">
+                                <Link href={logout()} as="a" onClick={closeDrawer}>
+                                    <Button
+                                        fullWidth
+                                        variant="outline"
+                                        color="red"
+                                        leftSection={<IconLogout size={16} />}
+                                    >
+                                        Sign Out
+                                    </Button>
+                                </Link>
+                            </Stack>
+                        ) : (
+                            <Stack gap="sm">
+                                <Link href={login()} as="a" onClick={closeDrawer}>
+                                    <Button fullWidth variant="default">
+                                        Log in
+                                    </Button>
+                                </Link>
+                                <Link href={register()} as="a" onClick={closeDrawer}>
+                                    <Button fullWidth>
+                                        Sign up
+                                    </Button>
+                                </Link>
+                            </Stack>
+                        )}
                     </Stack>
                 </ScrollArea>
             </Drawer>

@@ -2,7 +2,7 @@ import Link from '@/components/link';
 import AuthLayout from '@/layouts/auth-layout';
 import type { SharedData } from '@/types';
 import ProfileController from '@/wayfinder/actions/App/Http/Controllers/Settings/ProfileController';
-import { Form, Head, usePage } from '@inertiajs/react';
+import { Form, Head, usePage,router } from '@inertiajs/react';
 import {
     Badge,
     Button,
@@ -19,6 +19,7 @@ import {
     Text,
     TextInput,
     Title,
+    Group,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import {
@@ -27,6 +28,7 @@ import {
     IconFlame,
     IconPencil,
     IconShield,
+    IconLogout,
 } from '@tabler/icons-react';
 import { useRef, useState } from 'react';
 
@@ -75,6 +77,10 @@ export default function Profile({ loginStreak, decks, cardsMastered }: Props) {
         },
     ];
 
+    const handleLogout = () => {
+        router.post("/logout");
+    };
+
     return (
         <>
             <Head title="Profile" />
@@ -111,14 +117,25 @@ export default function Profile({ loginStreak, decks, cardsMastered }: Props) {
                                         Joined {createdAt}
                                     </Text>
                                 </Stack>
-                                <Button
-                                    variant="light"
-                                    size="sm"
-                                    leftSection={<IconPencil size={16} />}
-                                    onClick={() => setEditModalOpened(true)}
-                                >
-                                    Edit Profile
-                                </Button>
+                                <Group gap="sm">
+                                    <Button
+                                        variant="light"
+                                        size="sm"
+                                        leftSection={<IconPencil size={16} />}
+                                        onClick={() => setEditModalOpened(true)}
+                                    >
+                                        Edit Profile
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        color="red"
+                                        leftSection={<IconLogout size={16} />}
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </Button>
+                                </Group>
                             </Flex>
                         </Card>
 
