@@ -20,8 +20,8 @@ class DailyRewardService
         $startDate = $user->userInfo->reward_program_started_at ?? now();
         $monthsActive = $startDate->diffInMonths(now());
 
-        // start with 5 gems, increase by 1 each month
-        return 5 + $monthsActive;
+        // start with 10 gems, increase by 1 each month
+        return 10 + $monthsActive;
     }
 
     public function calculateFinalGems(User $user): int
